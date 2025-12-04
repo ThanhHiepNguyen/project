@@ -17,18 +17,29 @@
 		}
 
 		if(isset($tk) && isset($mk)){
-			$sql = "SELECT * FROM thanhvien WHERE email = '$tk' AND mat_khau = '$mk'";
+            // Lấy theo email, sau đó kiểm tra mật khẩu (hỗ trợ cả dạng hash và dạng cũ lưu plain-text)
+			$tk_escaped = mysqli_real_escape_string($conn, $tk);
+			$sql = "SELECT * FROM thanhvien WHERE email = '$tk_escaped' LIMIT 1";
 			$query = mysqli_query($conn, $sql);
-			$rows = mysqli_num_rows($query);
-			if($rows<=0){
+
+			if(!$query || mysqli_num_rows($query) === 0){
 				$error = 'Tài khoản hoặc mật khẩu chưa đúng';
 			}else{
-                // Lấy thông tin thành viên (bao gồm vai_tro)
 				$user = mysqli_fetch_assoc($query);
-				$_SESSION['tk'] = $tk;
-				$_SESSION['mk'] = $mk;
-                $_SESSION['vai_tro'] = isset($user['vai_tro']) ? $user['vai_tro'] : 'nhan_vien';
-				header('location:quantri.php');
+                $hash = $user['mat_khau'];
+
+                // Đúng nếu: (1) mật khẩu đang lưu dạng hash và verify ok, hoặc (2) hệ cũ lưu plain-text trùng mk
+                $isValidPassword = password_verify($mk, $hash) || ($mk === $hash);
+
+                if (!$isValidPassword) {
+                    $error = 'Tài khoản hoặc mật khẩu chưa đúng';
+                } else {
+                    $_SESSION['tk'] = $tk;
+                    $_SESSION['mk'] = $mk;
+                    $_SESSION['vai_tro'] = isset($user['vai_tro']) ? $user['vai_tro'] : 'nhan_vien';
+                    header('location:quantri.php');
+                    exit;
+                }
 			}
 		}
 	}

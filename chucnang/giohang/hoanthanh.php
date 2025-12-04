@@ -13,12 +13,12 @@
                 Cảm ơn quý khách đã mua hàng tại Shop Thu Minh!
             </h1>
             <p class="text-lg text-gray-600">
-                Hóa đơn mua hàng đã được gửi đến địa chỉ email của quý khách.
+                Hóa đơn mua hàng đã được lưu vào tài khoản của quý khách.
             </p>
             <p class="text-lg text-gray-600">
-                Quý khách có thể xem lại thông tin đơn hàng đã đặt ở phần 
-                <a href="index.php?page_layout=lichsudonhang" class="text-blue-600 hover:text-blue-700 font-semibold underline transition-colors duration-200">
-                    tra cứu đơn hàng
+                Quý khách có thể xem lại thông tin đơn hàng đã đặt trong mục 
+                <a href="index.php?page_layout=donhangcuatoi" class="text-blue-600 hover:text-blue-700 font-semibold underline transition-colors duration-200">
+                    Đơn hàng của tôi
                 </a>.
             </p>
             <p class="text-lg text-gray-600">
@@ -31,7 +31,7 @@
             <a href="index.php" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl">
                 Quay về trang chủ
             </a>
-            <a href="index.php?page_layout=lichsudonhang" class="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-colors duration-200">
+            <a href="index.php?page_layout=donhangcuatoi" class="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-colors duration-200">
                 Xem đơn hàng
             </a>
         </div>

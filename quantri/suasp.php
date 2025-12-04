@@ -21,9 +21,28 @@ $arr = mysqli_fetch_array($query);
             </tr>
             <tr>
                 <td>
-                    <label>Ảnh mô tả (link URL)</label><br />
-                    <input type="text" name="anh_sp"
-                           value="<?php echo isset($_POST['anh_sp']) ? $_POST['anh_sp'] : $arr['anh_sp']; ?>" />
+                    <label>Ảnh mô tả (upload file)</label><br />
+                    <?php if (!empty($arr['anh_sp'])): ?>
+                        <?php
+                        // Xử lý đường dẫn ảnh hiện tại cho đúng trong trang admin
+                        $currentImg = $arr['anh_sp'];
+                        if (preg_match('/^https?:\/\//', $currentImg)) {
+                            // Link tuyệt đối (http/https)
+                            $currentImgSrc = $currentImg;
+                        } elseif (strpos($currentImg, '/') === 0) {
+                            // Đã là đường dẫn tuyệt đối trên server (bắt đầu bằng /)
+                            $currentImgSrc = $currentImg;
+                        } else {
+                            // Đường dẫn tương đối trong project (vd: anh/ten-anh.jpg)
+                            // Admin đang ở thư mục quantri → cần ../ để ra gốc project
+                            $currentImgSrc = '../' . $currentImg;
+                        }
+                        ?>
+                        <p>Ảnh hiện tại:</p>
+                        <img src="<?php echo htmlspecialchars($currentImgSrc); ?>" alt="Ảnh hiện tại" style="max-width:150px; max-height:150px; display:block; margin-bottom:8px;" />
+                    <?php endif; ?>
+                    <input type="file" name="anh_sp" accept="image/*" />
+                    <p style="font-size:12px;color:#555;">Nếu không chọn ảnh mới, hệ thống sẽ giữ nguyên ảnh cũ.</p>
                     <?php if (isset($error_anh_sp)) { echo $error_anh_sp; } ?>
                 </td>
             </tr>
@@ -103,7 +122,7 @@ if (isset($_POST['submit'])) {
         $ten_sp = $_POST['ten_sp'];
     }
 
-    // Giá sản phẩm
+    // Giá sản phẩm (bắt buộc)
     if (empty($_POST['gia_sp'])) {
         $error_gia_sp = '<span style="color:red;">(*)</span>';
         $error = true;
@@ -111,44 +130,58 @@ if (isset($_POST['submit'])) {
         $gia_sp = $_POST['gia_sp'];
     }
 
-    // Khuyến mãi
-    if (empty($_POST['khuyen_mai'])) {
-        $error_khuyen_mai = '<span style="color:red;">(*)</span>';
-        $error = true;
-    } else {
+    // Khuyến mãi (cho phép để trống)
+    if (isset($_POST['khuyen_mai'])) {
         $khuyen_mai = $_POST['khuyen_mai'];
-    }
-
-    // Trạng thái
-    if (empty($_POST['trang_thai'])) {
-        $error_trang_thai = '<span style="color:red;">(*)</span>';
-        $error = true;
     } else {
-        $trang_thai = $_POST['trang_thai'];
+        $khuyen_mai = '';
     }
 
-    // Số lượng sản phẩm
-    if (empty($_POST['so_luong']) || !is_numeric($_POST['so_luong']) || $_POST['so_luong'] < 0) {
+    // Trạng thái (cho phép để trống)
+    if (isset($_POST['trang_thai'])) {
+        $trang_thai = $_POST['trang_thai'];
+    } else {
+        $trang_thai = '';
+    }
+
+    // Số lượng sản phẩm (mặc định 0 nếu trống)
+    if ($_POST['so_luong'] === '' || $_POST['so_luong'] === null) {
+        $so_luong = 0;
+    } elseif (!is_numeric($_POST['so_luong']) || $_POST['so_luong'] < 0) {
         $error_so_luong = '<span style="color:red;">Vui lòng nhập số lượng sản phẩm hợp lệ</span>';
         $error = true;
     } else {
         $so_luong = $_POST['so_luong'];
     }
 
-    // Chi tiết sản phẩm
-    if (empty($_POST['chi_tiet_sp'])) {
-        $error_chi_tiet_sp = '<span style="color:red;">(*)</span>';
-        $error = true;
-    } else {
+    // Chi tiết sản phẩm (cho phép để trống)
+    if (isset($_POST['chi_tiet_sp'])) {
         $chi_tiet_sp = $_POST['chi_tiet_sp'];
+    } else {
+        $chi_tiet_sp = '';
     }
 
-    // Ảnh mô tả sản phẩm (link URL)
-    if (empty($_POST['anh_sp'])) {
-        $error_anh_sp = '<span style="color:red;">Vui lòng nhập link ảnh sản phẩm</span>';
-        $error = true;
+    // Ảnh mô tả sản phẩm (upload file, có thể giữ ảnh cũ)
+    if (isset($_FILES['anh_sp']) && $_FILES['anh_sp']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['anh_sp']['error'] !== UPLOAD_ERR_OK) {
+            $error_anh_sp = '<span style="color:red;">Có lỗi khi upload ảnh sản phẩm</span>';
+            $error = true;
+        } else {
+            $uploadDir = '../anh/';
+            $fileName = basename($_FILES['anh_sp']['name']);
+            $fileName = preg_replace('/[^A-Za-z0-9_\.\-]/', '_', $fileName);
+            $targetPath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['anh_sp']['tmp_name'], $targetPath)) {
+                $anh_sp = 'anh/' . $fileName;
+            } else {
+                $error_anh_sp = '<span style="color:red;">Không thể lưu file ảnh sản phẩm</span>';
+                $error = true;
+            }
+        }
     } else {
-        $anh_sp = trim($_POST['anh_sp']);
+        // Không chọn ảnh mới -> giữ nguyên ảnh cũ
+        $anh_sp = $arr['anh_sp'];
     }
 
     // Danh mục sản phẩm
@@ -172,7 +205,12 @@ if (isset($_POST['submit'])) {
                       WHERE id_sp = $id_sp";
         
         $queryUpdate = mysqli_query($conn, $sqlUpdate);
-        header('location:quantri.php?page_layout=danhsachsp');
+        if ($queryUpdate) {
+            header('location:quantri.php?page_layout=danhsachsp');
+            exit;
+        } else {
+            echo '<p style="color:red;">Lỗi SQL: ' . htmlspecialchars(mysqli_error($conn)) . '</p>';
+        }
     }
 }
 

@@ -83,17 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ";
 
         if (mysqli_query($conn, $sql_insert)) {
-            $id_khachhang = mysqli_insert_id($conn);
-            $_SESSION['khachhang'] = [
-                'id_khachhang'  => $id_khachhang,
-                'ten_khachhang' => $ten_khachhang,
-                'email'         => $email,
-                'so_dien_thoai' => $so_dien_thoai,
-                'dia_chi'       => $dia_chi
-            ];
-
-            // Không dùng header() vì đã có output; dùng JavaScript để chuyển trang
-            echo '<script>window.location.href = "index.php";</script>';
+            // Sau khi đăng ký thành công, chuyển sang trang đăng nhập thay vì auto đăng nhập
+            echo '<script>alert("Đăng ký thành công. Vui lòng đăng nhập để tiếp tục."); window.location.href = "index.php?page_layout=dangnhap";</script>';
             exit;
         } else {
             $errors['email'] = 'Có lỗi khi tạo tài khoản. Vui lòng thử lại.';

@@ -23,7 +23,7 @@ $isChuShop   = ($currentRole === 'chu_shop');
 
 <body>
     <div id="header">
-        <a href="#"><img src="anh/logo.png" /></a>
+        <a href="quantri.php?page_layout=trangchu"><img src="../anh/logo.png" alt="Shop Thu Minh" /></a>
         <div id="navbar">
             <ul>
                 <li id="admin-home"><a href="quantri.php?page_layout=trangchu">Trang chủ</a></li>
@@ -34,6 +34,7 @@ $isChuShop   = ($currentRole === 'chu_shop');
                 <li><a href="quantri.php?page_layout=danhsachsp">Sản phẩm</a></li>
                 <li><a href="quantri.php?page_layout=khachhang">Khách hàng</a></li>
                 <li><a href="quantri.php?page_layout=quanlydonhang">Quản lý đơn hàng</a></li>
+                <li><a href="quantri.php?page_layout=binhluan">Bình luận</a></li>
             </ul>
             <div id="user-info">
                 <p>
@@ -100,6 +101,12 @@ $isChuShop   = ($currentRole === 'chu_shop');
                     break;
                 case 'sua_khachhang':
                     include_once('sua_khachhang.php');
+                    break;
+                case 'binhluan':
+                    include_once('binhluan.php');
+                    break;
+                case 'sua_binhluan':
+                    include_once('sua_binhluan.php');
                     break;
             }
         } else {

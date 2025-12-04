@@ -20,6 +20,36 @@
             }
         }
 
+        // Lưu bình luận sản phẩm (nếu có gửi form)
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+            $ten_bl       = trim($_POST['ten'] ?? '');
+            $dien_thoai   = trim($_POST['dien_thoai'] ?? '');
+            $noi_dung_bl  = trim($_POST['binh_luan'] ?? '');
+
+            if ($noi_dung_bl !== '') {
+                if ($ten_bl === '' && isset($_SESSION['khachhang'])) {
+                    $ten_bl = $_SESSION['khachhang']['ten_khachhang'];
+                }
+                if ($ten_bl === '') {
+                    $ten_bl = 'Khách hàng ẩn danh';
+                }
+
+                $ten_esc      = mysqli_real_escape_string($conn, $ten_bl);
+                $dt_esc       = mysqli_real_escape_string($conn, $dien_thoai);
+                $noidung_esc  = mysqli_real_escape_string($conn, $noi_dung_bl);
+
+                $sql_insert_bl = "
+                    INSERT INTO blsanpham (id_sp, ten, dien_thoai, binh_luan, ngay_gio)
+                    VALUES ($id_sp, '$ten_esc', '$dt_esc', '$noidung_esc', NOW())
+                ";
+                mysqli_query($conn, $sql_insert_bl);
+
+                // Tránh submit lại khi F5
+                echo '<script>window.location.href = "index.php?page_layout=chitietsp&id_sp=' . $id_sp . '";</script>';
+                exit;
+            }
+        }
+
         // Kiểm tra sản phẩm có nằm trong yêu thích của khách hiện tại không
         $is_favorite = false;
         if (isset($_SESSION['khachhang']) && $id_sp > 0) {
@@ -216,16 +246,103 @@
         <div class="clear"></div>
     </div>
 
-    <div class="prd-comment">
-        <h3>Bình luận sản phẩm</h3>
-        <form method="post">
-            <ul>
-                <li class="required">Tên <br /><input required type="text" name="ten" /></li>
-                <li class="required">Số điện thoại <br /><input required type="text" name="dien_thoai" /></li>
-                <li class="required">Nội dung <br /><textarea required name="binh_luan"></textarea></li>
-                <li class="binhluansm"><input type="submit" name="submit" value="Bình luận" /></li>
-            </ul>
-        </form>
+    <?php
+    // Lấy danh sách bình luận cho sản phẩm
+    $ds_binhluan = [];
+    $sql_bl = "SELECT * FROM blsanpham WHERE id_sp = $id_sp ORDER BY ngay_gio DESC";
+    $query_bl = mysqli_query($conn, $sql_bl);
+    if ($query_bl) {
+        while ($row_bl = mysqli_fetch_assoc($query_bl)) {
+            $ds_binhluan[] = $row_bl;
+        }
+    }
+    $tong_bl = count($ds_binhluan);
+    ?>
+
+    <div class="prd-comment" style="margin-top: 40px; background:#fff; border-radius:12px; border:1px solid #e5e7eb; padding:20px 24px;">
+        <div style="max-width: 960px; margin: 0 auto;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <h3 style="font-size:20px; font-weight:700; margin:0; color:#111827;">Bình luận</h3>
+                <span style="font-size:13px; color:#6b7280;">
+                    <?php echo $tong_bl; ?> bình luận
+                </span>
+            </div>
+
+            <!-- Ô nhập bình luận kiểu Facebook/Shopee -->
+            <form method="post">
+                <!-- Ẩn các field tên/điện thoại, vẫn giữ name để backend dùng được -->
+                <input type="hidden" name="ten" value="<?php echo isset($_SESSION['khachhang']['ten_khachhang']) ? htmlspecialchars($_SESSION['khachhang']['ten_khachhang']) : ''; ?>">
+                <input type="hidden" name="dien_thoai" value="">
+
+                <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <!-- Avatar tròn với chữ cái đầu tên -->
+                    <div style="flex-shrink:0; width:36px; height:36px; border-radius:999px; background:#e5e7eb; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:600; color:#374151;">
+                        <?php
+                        if (isset($_SESSION['khachhang'])) {
+                            $name_cmt = trim($_SESSION['khachhang']['ten_khachhang']);
+                            $initial_cmt = mb_substr($name_cmt, 0, 1, 'UTF-8');
+                            echo htmlspecialchars(mb_strtoupper($initial_cmt));
+                        } else {
+                            echo 'G';
+                        }
+                        ?>
+                    </div>
+
+                    <div style="flex:1; display:flex; align-items:center; gap:12px; background:#f3f4f6; border-radius:999px; padding:6px 10px 6px 16px; border:1px solid transparent;">
+                        <textarea
+                            required
+                            name="binh_luan"
+                            rows="1"
+                            placeholder="Nhập nội dung bình luận..."
+                            style="flex:1; border:none; background:transparent; resize:none; outline:none; font-size:14px; padding:6px 0; max-height:80px;"
+                            oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px';"
+                        ></textarea>
+
+                        <button
+                            type="submit"
+                            name="submit"
+                            style="flex-shrink:0; padding:7px 16px; border-radius:999px; border:none; background:#111827; color:#fff; font-size:14px; font-weight:600; cursor:pointer;"
+                        >
+                            Gửi bình luận
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <?php if ($tong_bl > 0): ?>
+                <div class="comment-list" style="margin-top: 24px;">
+                    <?php foreach ($ds_binhluan as $bl): ?>
+                        <div style="display:flex; gap:12px; padding:10px 0; border-top:1px solid #e5e7eb;">
+                            <div style="flex-shrink:0; width:32px; height:32px; border-radius:999px; background:#e5e7eb; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#374151;">
+                                <?php
+                                $initial_bl = mb_substr($bl['ten'], 0, 1, 'UTF-8');
+                                echo htmlspecialchars(mb_strtoupper($initial_bl));
+                                ?>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-size:14px; font-weight:600; color:#111827;">
+                                    <?php echo htmlspecialchars($bl['ten']); ?>
+                                    <span style="font-size:12px; color:#9ca3af; margin-left:4px;">
+                                        <?php echo date('d/m/Y H:i', strtotime($bl['ngay_gio'])); ?>
+                                    </span>
+                                </div>
+                                <div style="margin-top:4px; font-size:14px; color:#111827; white-space:pre-line;">
+                                    <?php echo nl2br(htmlspecialchars($bl['binh_luan'])); ?>
+                                </div>
+
+                                <?php if (!empty($bl['phan_hoi_admin'] ?? '')): ?>
+                                    <div style="margin-top:8px; padding:8px 10px; background:#f3f4ff; border-radius:8px; font-size:13px; color:#1f2937;">
+                                        <span style="font-weight:600; color:#1d4ed8;">Quản trị viên</span>
+                                        <span style="margin:0 4px;">•</span>
+                                        <span><?php echo nl2br(htmlspecialchars($bl['phan_hoi_admin'])); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
     
     </div>

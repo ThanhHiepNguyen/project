@@ -1,5 +1,15 @@
 <?php
 ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Bắt buộc đăng nhập trước khi mua ngay
+if (!isset($_SESSION['khachhang'])) {
+    header('Location: index.php?page_layout=dangnhap');
+    exit;
+}
+
 // Kết nối tới cơ sở dữ liệu
 require "cauhinh/ketnoi.php";
 
@@ -73,9 +83,16 @@ if (isset($_POST['submit'])) {
 
         $tong_gia = $gia_sp; // Chỉ có 1 sản phẩm
 
-        // Thực hiện insert vào bảng donhang
-        $sql = "INSERT INTO donhang (ten_khachhang, email, so_dien_thoai, dia_chi, tong_gia, phuong_thuc_thanh_toan) 
-                VALUES ('$ten', '$mail', '$dt', '$dc', $tong_gia, '$phuong_thuc_thanh_toan')";
+        // Xác định id_khachhang nếu đã đăng nhập
+        $id_khachhang_sql = "NULL";
+        if (isset($_SESSION['khachhang']['id_khachhang'])) {
+            $id_khachhang = (int)$_SESSION['khachhang']['id_khachhang'];
+            $id_khachhang_sql = $id_khachhang;
+        }
+
+        // Thực hiện insert vào bảng donhang (gắn với tài khoản nếu có)
+        $sql = "INSERT INTO donhang (id_khachhang, ten_khachhang, email, so_dien_thoai, dia_chi, tong_gia, phuong_thuc_thanh_toan) 
+                VALUES ($id_khachhang_sql, '$ten', '$mail', '$dt', '$dc', $tong_gia, '$phuong_thuc_thanh_toan')";
         mysqli_query($conn, $sql);
         $id_donhang = mysqli_insert_id($conn); // Lấy id đơn hàng vừa tạo
 

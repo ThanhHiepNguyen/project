@@ -13,7 +13,7 @@
             <p><strong class="text-blue-600">Địa chỉ trụ sở chính:</strong> S1.10 Vinhomes Ocean Park - Đa Tốn - Gia Lâm - Hà Nội</p>
             <p><strong class="text-blue-600">Điện thoại:</strong> 0368.686.868 (chính) - 0388.468.999 (phụ)</p>
             <p><strong class="text-blue-600">Email:</strong> Contact@hp.vn</p>
-            <p><strong class="text-blue-600">Website:</strong> <a href="#" class="text-blue-600 hover:text-blue-700 underline">www.phutungxehanhphuong.vn</a></p>
+            <p><strong class="text-blue-600">Website:</strong> <a href="#" class="text-blue-600 hover:text-blue-700 underline">www.phutungxethuminh.vn</a></p>
             <p><strong class="text-blue-600">Giấy phép kinh doanh:</strong> 0101234567</p>
             <p><strong class="text-blue-600">Cán bộ - công nhân viên:</strong> Đội ngũ nhân viên chuyên nghiệp, giàu kinh nghiệm trong lĩnh vực phụ tùng xe</p>
         </div>

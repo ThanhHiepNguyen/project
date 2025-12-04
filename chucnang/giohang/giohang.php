@@ -137,7 +137,7 @@ if (isset($_POST['update_cart'])) {
                 <a href="index.php" class="mb-6 text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200">
                     ← Quay lại trang chủ
                 </a>
-                <img src="anh/empty-cart.png" alt="Giỏ hàng trống" class="max-w-xs mb-6">
+                
                 <p class="text-xl text-gray-600 font-semibold">Giỏ hàng trống</p>
             </div>';
         }
@@ -147,7 +147,7 @@ if (isset($_POST['update_cart'])) {
             <a href="index.php" class="mb-6 text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200">
                 ← Quay lại trang chủ
             </a>
-            <img src="anh/empty-cart.png" alt="Giỏ hàng trống" class="max-w-xs mb-6">
+            
             <p class="text-xl text-gray-600 font-semibold">Giỏ hàng trống</p>
         </div>';
     }

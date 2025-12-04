@@ -1,3 +1,15 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Bắt buộc đăng nhập trước khi sử dụng chức năng tra cứu đơn hàng
+if (!isset($_SESSION['khachhang'])) {
+    header('Location: index.php?page_layout=dangnhap');
+    exit;
+}
+?>
+
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="bg-white rounded-lg shadow-md p-8">
         <h2 class="text-3xl font-bold text-center text-gray-800 mb-8 pb-4 border-b-2 border-blue-600">

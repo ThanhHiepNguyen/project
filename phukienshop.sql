@@ -59,6 +59,9 @@ CREATE TABLE `blsanpham` (
   PRIMARY KEY (`id_bl`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE blsanpham
+ADD COLUMN phan_hoi_admin TEXT NULL AFTER binh_luan;
+
 -- Chèn dữ liệu vào bảng `blsanpham`
 INSERT INTO `blsanpham` (`id_bl`, `id_sp`, `ten`, `dien_thoai`, `binh_luan`, `ngay_gio`) VALUES
 (0, 29, 'Võ Minh Hạnh', '00000', 'fdsfsdgfsg', '2024-08-26 20:55:28');
@@ -176,6 +179,17 @@ CREATE TABLE `thanhvien` (
   PRIMARY KEY (`id_thanhvien`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+INSERT INTO `thanhvien` (`email`, `mat_khau`, `vai_tro`) VALUES
+
+('admin@shop.com',
+ 'admin123',
+ 'chu_shop'),
+
+
+('staff1@shop.com',
+ 'nhanvien123',
+ 'nhan_vien');
 
 
 -- --------------------------------------------------------
@@ -330,4 +344,6 @@ ALTER TABLE `yeu_thich`
 ALTER TABLE `thong_so_ky_thuat`
   ADD CONSTRAINT `thong_so_ky_thuat_ibfk_1` FOREIGN KEY (`id_sanpham`) REFERENCES `sanpham` (`id_sp`);
 
+ALTER TABLE blsanpham ADD COLUMN phan_hoi_admin TEXT NULL AFTER binh_luan;
+    
 COMMIT;

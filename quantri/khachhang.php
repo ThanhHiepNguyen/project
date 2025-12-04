@@ -10,6 +10,20 @@ $query = mysqli_query($conn, $sql);
 
 <h2 style="font-size:24px;font-weight:700;margin-bottom:20px;">Quản lý khách hàng</h2>
 
+<?php if (isset($_SESSION['error_khachhang'])): ?>
+    <script>
+        alert("<?php echo addslashes($_SESSION['error_khachhang']); ?>");
+    </script>
+    <?php unset($_SESSION['error_khachhang']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['success_khachhang'])): ?>
+    <script>
+        alert("<?php echo addslashes($_SESSION['success_khachhang']); ?>");
+    </script>
+    <?php unset($_SESSION['success_khachhang']); ?>
+<?php endif; ?>
+
 <div style="overflow-x:auto;">
     <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 10px 25px rgba(15,23,42,0.08);">
         <thead>

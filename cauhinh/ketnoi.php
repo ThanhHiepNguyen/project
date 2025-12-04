@@ -2,7 +2,7 @@
 	$dbHost = 'localhost';
 	$dbUsername = 'root';
 	$dbPassword = '';
-	$dbName = 'trangsucshop';
+	$dbName = 'phukienshop';
 
 	$conn = mysqli_connect($dbHost,$dbUsername,$dbPassword,$dbName,'3306');
 	if ($conn){

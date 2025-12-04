@@ -20,7 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($rs_khachhang && mysqli_num_rows($rs_khachhang) === 1) {
             $row_khachhang = mysqli_fetch_assoc($rs_khachhang);
-            if (password_verify($mat_khau, $row_khachhang['mat_khau'])) {
+
+            $hash = $row_khachhang['mat_khau'];
+            // Hỗ trợ cả mật khẩu dạng hash mới và mật khẩu text cũ trong database
+            $isValidPassword = password_verify($mat_khau, $hash) || ($mat_khau === $hash);
+
+            if ($isValidPassword) {
                 $_SESSION['khachhang'] = [
                     'id_khachhang'  => $row_khachhang['id_khachhang'],
                     'ten_khachhang' => $row_khachhang['ten_khachhang'],
@@ -48,6 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Chưa có tài khoản?
                 <a href="index.php?page_layout=dangky" class="font-medium text-blue-600 hover:text-blue-500">
                     Đăng ký ngay
+                </a>
+                <br />
+                <a href="index.php?page_layout=quenmatkhau" class="text-xs text-gray-500 hover:text-blue-500">
+                    Quên mật khẩu?
                 </a>
             </p>
         </div>
@@ -113,8 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div>
                     <button id="facebook-signin-button"
                             class="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm
-                                   bg-white text-sm font-medium text-gray-700 hover:bg-gray-50
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">
+                                   bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" class="h-5 w-5 mr-2" alt="Facebook Logo">
                         Đăng nhập với Facebook
                     </button>
@@ -156,15 +164,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     }
 
-    // Xử lý Facebook
+    // Xử lý Facebook (tạm thời chưa hỗ trợ)
     const btnFacebook = document.getElementById('facebook-signin-button');
-    if(btnFacebook) {
+    if (btnFacebook) {
         btnFacebook.addEventListener('click', (e) => {
             e.preventDefault();
-            firebaseAuth.signInWithPopup(facebookProvider)
-                .then((result) => result.user.getIdToken())
-                .then((idToken) => sendTokenToBackend(idToken))
-                .catch((error) => alert("Lỗi Facebook: " + error.message));
         });
     }
 

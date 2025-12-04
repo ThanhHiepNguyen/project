@@ -25,12 +25,12 @@ if (isset($_GET['search'])) {
             WHERE ten_khachhang LIKE '%$search_keyword%' 
                OR email LIKE '%$search_keyword%' 
                OR so_dien_thoai LIKE '%$search_keyword%'
-            --    OR id_donhang LIKE '%$search_keyword%'
             ORDER BY 
                 CASE 
                     WHEN trang_thai = 'Chờ giao hàng' THEN 1
                     WHEN trang_thai = 'Đang giao hàng' THEN 2
-                    ELSE 3
+                    WHEN trang_thai = 'Đã giao hàng' THEN 3
+                    ELSE 4
                 END, ngay_dat DESC";
 } else {
     // Default SQL query if no search query is submitted
@@ -38,7 +38,8 @@ if (isset($_GET['search'])) {
             CASE 
                 WHEN trang_thai = 'Chờ giao hàng' THEN 1
                 WHEN trang_thai = 'Đang giao hàng' THEN 2
-                ELSE 3
+                WHEN trang_thai = 'Đã giao hàng' THEN 3
+                ELSE 4
             END, ngay_dat DESC";
 }
 
@@ -132,7 +133,7 @@ $result = mysqli_query($conn, $sql);
             </tr>
             <?php while ($row = mysqli_fetch_assoc($result)) {
                 $rowClass = '';
-                if ($row['trang_thai'] == 'Đã thanh toán') {
+                if ($row['trang_thai'] == 'Đã thanh toán' || $row['trang_thai'] == 'Đã giao hàng') {
                     $rowClass = 'paid-order';
                 } elseif ($row['trang_thai'] == 'Chờ giao hàng') {
                     $rowClass = 'pending-order';
@@ -153,6 +154,7 @@ $result = mysqli_query($conn, $sql);
                             <select name="trang_thai" class="order-status-select">
                                 <option value="Chờ giao hàng" <?php if ($row['trang_thai'] == 'Chờ giao hàng') echo 'selected'; ?>>Chờ giao hàng</option>
                                 <option value="Đang giao hàng" <?php if ($row['trang_thai'] == 'Đang giao hàng') echo 'selected'; ?>>Đang giao hàng</option>
+                                <option value="Đã giao hàng" <?php if ($row['trang_thai'] == 'Đã giao hàng') echo 'selected'; ?>>Đã giao hàng</option>
                                 <option value="Đã thanh toán" <?php if ($row['trang_thai'] == 'Đã thanh toán') echo 'selected'; ?>>Đã thanh toán</option>
                             </select>
                         </td>

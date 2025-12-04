@@ -1,7 +1,15 @@
 
 <?php
 // Bắt đầu session
-//session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Bắt buộc đăng nhập trước khi vào bước thanh toán giỏ hàng
+if (!isset($_SESSION['khachhang'])) {
+    header('Location: index.php?page_layout=dangnhap');
+    exit;
+}
 
 // Kết nối tới cơ sở dữ liệu
 require "cauhinh/ketnoi.php";

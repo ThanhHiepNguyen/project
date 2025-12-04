@@ -1,7 +1,9 @@
 <?php
 require "../cauhinh/ketnoi.php";
-$sql = "SELECT * FROM sanpham";
-$query = mysqli_query($conn, $sql);
+
+// Lấy danh mục sản phẩm mới nhất từ bảng dmsanpham
+$sql_dm = "SELECT id_dm, ten_dm FROM dmsanpham ORDER BY id_dm ASC";
+$query_dm = mysqli_query($conn, $sql_dm);
 $error = NULL;
 
 if (isset($_POST['submit'])) {
@@ -36,11 +38,26 @@ if (isset($_POST['submit'])) {
     } else {
         $chi_tiet_sp = $_POST['chi_tiet_sp'];
     }
-    // Ảnh mô tả sản phẩm (link URL)
-    if (empty($_POST['anh_sp'])) {
-        $error_anh_sp = '<span style="color:red;">Vui lòng nhập link ảnh sản phẩm<span>';
+    // Ảnh mô tả sản phẩm (upload file)
+    if (!isset($_FILES['anh_sp']) || $_FILES['anh_sp']['error'] == UPLOAD_ERR_NO_FILE) {
+        $error_anh_sp = '<span style="color:red;">Vui lòng chọn ảnh sản phẩm<span>';
+    } elseif ($_FILES['anh_sp']['error'] !== UPLOAD_ERR_OK) {
+        $error_anh_sp = '<span style="color:red;">Có lỗi khi upload ảnh sản phẩm<span>';
     } else {
-        $anh_sp = trim($_POST['anh_sp']);
+        // Thư mục lưu ảnh (tính từ gốc project)
+        $uploadDir = '../anh/';
+        // Tạo tên file an toàn
+        $fileName = basename($_FILES['anh_sp']['name']);
+        $fileName = preg_replace('/[^A-Za-z0-9_\.\-]/', '_', $fileName);
+
+        $targetPath = $uploadDir . $fileName;
+        // Di chuyển file upload vào thư mục anh
+        if (move_uploaded_file($_FILES['anh_sp']['tmp_name'], $targetPath)) {
+            // Đường dẫn lưu trong DB (dùng khi hiển thị)
+            $anh_sp = 'anh/' . $fileName;
+        } else {
+            $error_anh_sp = '<span style="color:red;">Không thể lưu file ảnh sản phẩm<span>';
+        }
     }
     // Danh mục sản phẩm
     if ($_POST['id_dm'] == 'unselect') {
@@ -71,7 +88,7 @@ if (isset($_POST['submit'])) {
 <link rel="stylesheet" type="text/css" href="css/themsp.css" />
 <h2>Thêm mới sản phẩm</h2>
 <div id="main">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <table id="add-prd" border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <td><label>Tên sản phẩm</label><br /><input type="text" name="ten_sp" /><?php if (isset($error_ten_sp)) {
@@ -80,23 +97,23 @@ if (isset($_POST['submit'])) {
             </tr>
             <tr>
                 <td>
-                    <label>Ảnh mô tả (link URL)</label><br />
-                    <input type="text" name="anh_sp" placeholder="https://example.com/anh-phu-tung.jpg" />
+                    <label>Ảnh mô tả (upload file)</label><br />
+                    <input type="file" name="anh_sp" accept="image/*" />
                     <?php if (isset($error_anh_sp)) { echo $error_anh_sp; } ?>
                 </td>
             </tr>
             <tr>
-                <td><label>Loại sản phẩm</label><br />
+                <td>
+                    <label>Loại sản phẩm</label><br />
                     <select name="id_dm">
                         <option value="unselect" selected="selected">Lựa chọn danh mục sản phẩm</option>
-                        <option value=1>Nhẫn</option>
-                        <option value=2>Dây chuyền</option>
-                        <option value=3>Bông tai</option>
-                        <option value=4>Lắc tay</option>
-                        <option value=5>Charm</option>
-                        <option value=6>Kiềng</option>
-                        <option value=7>Vòng</option>
-                        <option value=8>Mặt dây chuyền</option>
+                        <?php if ($query_dm && mysqli_num_rows($query_dm) > 0): ?>
+                            <?php while ($row_dm = mysqli_fetch_assoc($query_dm)): ?>
+                                <option value="<?php echo (int)$row_dm['id_dm']; ?>">
+                                    <?php echo htmlspecialchars($row_dm['ten_dm']); ?>
+                                </option>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
                     </select>
                     <?php if (isset($error_id_dm)) {
                         echo $error_id_dm;

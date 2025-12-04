@@ -66,12 +66,6 @@ require "cauhinh/ketnoi.php";
                 case 'hoanthanh':
                     require_once('chucnang/giohang/hoanthanh.php');
                     break;
-                case 'lichsudonhang':
-                    require_once('chucnang/giohang/lichsudonhang.php');
-                    break;
-                case 'thongtindonhang':
-                    require_once('chucnang/giohang/thongtindonhang.php');
-                    break;
                 case 'chitietdonhang':
                     require_once('chucnang/giohang/chitietdonhang.php');
                     break;
@@ -83,6 +77,9 @@ require "cauhinh/ketnoi.php";
                     break;
                 case 'dangky':
                     require_once('chucnang/auth/dangky.php');
+                    break;
+                case 'quenmatkhau':
+                    require_once('chucnang/auth/quenmatkhau.php');
                     break;
                 case 'donhangcuatoi':
                     require_once('chucnang/auth/donhangcuatoi.php');
