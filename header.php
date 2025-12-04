@@ -26,7 +26,7 @@
                 </a>
             </nav>
 
-            <!-- Right Side: Search, Cart, Order Tracking -->
+            <!-- Right Side: Search, Cart, Order Tracking, User -->
             <div class="flex items-center space-x-4">
                 <!-- Search Bar -->
                 <div class="hidden lg:block">
@@ -41,6 +41,55 @@
                 <!-- Cart -->
                 <div>
                     <?php require "chucnang/giohang/giohangcuaban.php"; ?>
+                </div>
+
+                <!-- User Auth (desktop dropdown) -->
+                <div class="hidden md:block relative">
+                    <button id="user-menu-button"
+                            class="flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/60 bg-blue-500/40 text-white text-sm font-semibold hover:bg-blue-500/70 transition">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 text-xs font-bold uppercase">
+                            <?php
+                            if (isset($_SESSION['khachhang'])) {
+                                $name = trim($_SESSION['khachhang']['ten_khachhang']);
+                                $initials = mb_substr($name, 0, 1, 'UTF-8');
+                                echo htmlspecialchars($initials);
+                            } else {
+                                echo '<i class="fa-solid fa-user"></i>';
+                            }
+                            ?>
+                        </span>
+                        <span>
+                            <?php if (isset($_SESSION['khachhang'])): ?>
+                                Xin chào, <span class="font-bold"><?php echo htmlspecialchars($_SESSION['khachhang']['ten_khachhang']); ?></span>
+                            <?php else: ?>
+                                Tài khoản
+                            <?php endif; ?>
+                        </span>
+                        <i class="fa-solid fa-chevron-down text-xs opacity-80"></i>
+                    </button>
+
+                    <div id="user-menu"
+                         class="hidden absolute right-0 mt-2 w-48 rounded-xl bg-white shadow-lg border border-gray-100 py-2 z-50">
+                        <?php if (isset($_SESSION['khachhang'])): ?>
+                            <a href="index.php?page_layout=donhangcuatoi"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700">
+                                Đơn hàng của tôi
+                            </a>
+                            <button onclick="window.location.href='index.php?page_layout=dangxuat'"
+                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600">
+                                Đăng xuất
+                            </button>
+                        <?php else: ?>
+                            <a href="index.php?page_layout=dangnhap"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700">
+                                Đăng nhập
+                            </a>
+                            <a href="index.php?page_layout=dangky"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700">
+                                Đăng ký
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -89,6 +138,33 @@
             <a href="index.php?page_layout=lienhe" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
                 <i class="fa-solid fa-phone mr-2"></i>Liên hệ
             </a>
+            <div class="pt-2 border-t border-gray-200 mt-2">
+                <?php if (isset($_SESSION['khachhang'])): ?>
+                    <p class="px-3 py-2 text-sm text-gray-700">
+                        Xin chào,
+                        <span class="font-semibold">
+                            <?php echo htmlspecialchars($_SESSION['khachhang']['ten_khachhang']); ?>
+                        </span>
+                    </p>
+                    <a href="index.php?page_layout=donhangcuatoi"
+                       class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
+                        <i class="fa-solid fa-box mr-2"></i>Đơn hàng của tôi
+                    </a>
+                    <a href="index.php?page_layout=dangxuat"
+                       class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
+                        <i class="fa-solid fa-right-from-bracket mr-2"></i>Đăng xuất
+                    </a>
+                <?php else: ?>
+                    <a href="index.php?page_layout=dangnhap"
+                       class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i>Đăng nhập
+                    </a>
+                    <a href="index.php?page_layout=dangky"
+                       class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
+                        <i class="fa-solid fa-user-plus mr-2"></i>Đăng ký
+                    </a>
+                <?php endif; ?>
+            </div>
             <div class="pt-2">
                 <?php require "chucnang/giohang/tracuudonhang.php"; ?>
             </div>
@@ -102,4 +178,21 @@
         const menu = document.getElementById('mobile-menu');
         menu.classList.toggle('hidden');
     });
+
+    // User dropdown (desktop)
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userMenu = document.getElementById('user-menu');
+
+    if (userMenuButton && userMenu) {
+        userMenuButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            userMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function () {
+            if (!userMenu.classList.contains('hidden')) {
+                userMenu.classList.add('hidden');
+            }
+        });
+    }
 </script>

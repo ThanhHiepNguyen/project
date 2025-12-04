@@ -78,6 +78,18 @@ require "cauhinh/ketnoi.php";
                 case 'muahangtructiep':
                     require_once('chucnang/giohang/muahangtructiep.php');
                     break;
+                case 'dangnhap':
+                    require_once('chucnang/auth/dangnhap.php');
+                    break;
+                case 'dangky':
+                    require_once('chucnang/auth/dangky.php');
+                    break;
+                case 'donhangcuatoi':
+                    require_once('chucnang/auth/donhangcuatoi.php');
+                    break;
+                case 'dangxuat':
+                    require_once('chucnang/auth/dangxuat.php');
+                    break;
                 default:
                     require_once('chucnang/sanpham/sanphamdacbiet.php');
                     require_once('chucnang/sanpham/sanphammoi.php');

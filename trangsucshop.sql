@@ -95,6 +95,7 @@ INSERT INTO `dmsanpham` (`id_dm`, `ten_dm`) VALUES
 
 CREATE TABLE `donhang` (
   `id_donhang` int(11) NOT NULL,
+  `id_khachhang` int(11) DEFAULT NULL,
   `ten_khachhang` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `so_dien_thoai` varchar(20) NOT NULL,
@@ -140,7 +141,8 @@ CREATE TABLE `sanpham` (
   `trang_thai` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `dac_biet` int(1) NOT NULL,
   `chi_tiet_sp` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `so_luong` int(11) UNSIGNED NOT NULL DEFAULT 0
+  `so_luong` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `so_luong_da_ban` int(11) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -196,17 +198,60 @@ INSERT INTO `sanpham` (`id_sp`, `id_dm`, `ten_sp`, `anh_sp`, `gia_sp`, `khuyen_m
 CREATE TABLE `thanhvien` (
   `id_thanhvien` int(10) NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mat_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `mat_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vai_tro` enum('chu_shop','nhan_vien') NOT NULL DEFAULT 'nhan_vien'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `thanhvien`
 --
 
-INSERT INTO `thanhvien` (`id_thanhvien`, `email`, `mat_khau`) VALUES
-(1, 'hanhminhvo18@gmail.com', '123456'),
-(2, 'hanhneee@gmail.com', '123456'),
-(4, 'user@gmail.com', '123456');
+INSERT INTO `thanhvien` (`id_thanhvien`, `email`, `mat_khau`, `vai_tro`) VALUES
+(1, 'hanhminhvo18@gmail.com', '123456', 'chu_shop'),
+(2, 'hanhneee@gmail.com', '123456', 'nhan_vien'),
+(4, 'user@gmail.com', '123456', 'nhan_vien');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `khachhang`
+--
+
+CREATE TABLE `khachhang` (
+  `id_khachhang` int(11) NOT NULL,
+  `ten_khachhang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mat_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `so_dien_thoai` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dia_chi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ngay_dang_ky` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `yeu_thich`
+--
+
+CREATE TABLE `yeu_thich` (
+  `id_yeu_thich` int(11) NOT NULL,
+  `id_khachhang` int(11) NOT NULL,
+  `id_sanpham` int(11) UNSIGNED NOT NULL,
+  `ngay_them` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `thong_so_ky_thuat`
+--
+
+CREATE TABLE `thong_so_ky_thuat` (
+  `id_thong_so` int(11) NOT NULL,
+  `id_sanpham` int(11) UNSIGNED NOT NULL,
+  `ten_thong_so` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gia_tri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -229,7 +274,8 @@ ALTER TABLE `dmsanpham`
 -- Chỉ mục cho bảng `donhang`
 --
 ALTER TABLE `donhang`
-  ADD PRIMARY KEY (`id_donhang`);
+  ADD PRIMARY KEY (`id_donhang`),
+  ADD KEY `id_khachhang` (`id_khachhang`);
 
 --
 -- Chỉ mục cho bảng `sanpham`
@@ -242,6 +288,28 @@ ALTER TABLE `sanpham`
 --
 ALTER TABLE `thanhvien`
   ADD PRIMARY KEY (`id_thanhvien`);
+
+--
+-- Chỉ mục cho bảng `khachhang`
+--
+ALTER TABLE `khachhang`
+  ADD PRIMARY KEY (`id_khachhang`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Chỉ mục cho bảng `yeu_thich`
+--
+ALTER TABLE `yeu_thich`
+  ADD PRIMARY KEY (`id_yeu_thich`),
+  ADD KEY `id_khachhang` (`id_khachhang`),
+  ADD KEY `id_sanpham` (`id_sanpham`);
+
+--
+-- Chỉ mục cho bảng `thong_so_ky_thuat`
+--
+ALTER TABLE `thong_so_ky_thuat`
+  ADD PRIMARY KEY (`id_thong_so`),
+  ADD KEY `id_sanpham` (`id_sanpham`);
 
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
@@ -278,6 +346,24 @@ ALTER TABLE `thanhvien`
   MODIFY `id_thanhvien` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT cho bảng `khachhang`
+--
+ALTER TABLE `khachhang`
+  MODIFY `id_khachhang` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `yeu_thich`
+--
+ALTER TABLE `yeu_thich`
+  MODIFY `id_yeu_thich` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `thong_so_ky_thuat`
+--
+ALTER TABLE `thong_so_ky_thuat`
+  MODIFY `id_thong_so` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Các ràng buộc cho các bảng đã đổ
 --
 
@@ -286,6 +372,25 @@ ALTER TABLE `thanhvien`
 --
 ALTER TABLE `chitiet_donhang`
   ADD CONSTRAINT `chitiet_donhang_ibfk_1` FOREIGN KEY (`id_donhang`) REFERENCES `donhang` (`id_donhang`);
+
+--
+-- Các ràng buộc cho bảng `donhang`
+--
+ALTER TABLE `donhang`
+  ADD CONSTRAINT `donhang_ibfk_1` FOREIGN KEY (`id_khachhang`) REFERENCES `khachhang` (`id_khachhang`);
+
+--
+-- Các ràng buộc cho bảng `yeu_thich`
+--
+ALTER TABLE `yeu_thich`
+  ADD CONSTRAINT `yeu_thich_ibfk_1` FOREIGN KEY (`id_khachhang`) REFERENCES `khachhang` (`id_khachhang`),
+  ADD CONSTRAINT `yeu_thich_ibfk_2` FOREIGN KEY (`id_sanpham`) REFERENCES `sanpham` (`id_sp`);
+
+--
+-- Các ràng buộc cho bảng `thong_so_ky_thuat`
+--
+ALTER TABLE `thong_so_ky_thuat`
+  ADD CONSTRAINT `thong_so_ky_thuat_ibfk_1` FOREIGN KEY (`id_sanpham`) REFERENCES `sanpham` (`id_sp`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

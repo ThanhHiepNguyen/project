@@ -68,9 +68,16 @@ if (isset($_POST['submit'])) {
             $tong_gia += $sl * $row['gia_sp'];
         }
 
-        // Thực hiện insert vào bảng donhang
-        $sql = "INSERT INTO donhang (ten_khachhang, email, so_dien_thoai, dia_chi, tong_gia, phuong_thuc_thanh_toan) 
-        VALUES ('$ten', '$mail', '$dt', '$dc', $tong_gia, '$phuong_thuc_thanh_toan')";
+        // Xác định id_khachhang nếu đã đăng nhập
+        $id_khachhang_sql = "NULL";
+        if (isset($_SESSION['khachhang']['id_khachhang'])) {
+            $id_khachhang = (int)$_SESSION['khachhang']['id_khachhang'];
+            $id_khachhang_sql = $id_khachhang;
+        }
+
+        // Thực hiện insert vào bảng donhang (gắn với tài khoản nếu có)
+        $sql = "INSERT INTO donhang (id_khachhang, ten_khachhang, email, so_dien_thoai, dia_chi, tong_gia, phuong_thuc_thanh_toan) 
+        VALUES ($id_khachhang_sql, '$ten', '$mail', '$dt', '$dc', $tong_gia, '$phuong_thuc_thanh_toan')";
         mysqli_query($conn, $sql);
         $id_donhang = mysqli_insert_id($conn); // Lấy id đơn hàng vừa tạo
 
@@ -101,6 +108,14 @@ if (isset($_POST['submit'])) {
         header('location: index.php?page_layout=hoanthanh');
         exit(); // Đảm bảo thoát sau khi điều hướng
     }
+}
+
+// Nếu khách đã đăng nhập, tự động điền thông tin mặc định (khi chưa submit)
+if (!isset($ten) && isset($_SESSION['khachhang'])) {
+    $ten  = $_SESSION['khachhang']['ten_khachhang'] ?? '';
+    $mail = $_SESSION['khachhang']['email'] ?? '';
+    $dt   = $_SESSION['khachhang']['so_dien_thoai'] ?? '';
+    $dc   = $_SESSION['khachhang']['dia_chi'] ?? '';
 }
 ?>
 
