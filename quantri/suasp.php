@@ -21,9 +21,10 @@ $arr = mysqli_fetch_array($query);
             </tr>
             <tr>
                 <td>
-                    <label>Ảnh mô tả</label><br />
-                    <input type="file" name="anh_sp" />
-                    <input type="text" disabled value="<?php echo $arr['anh_sp']; ?>" />
+                    <label>Ảnh mô tả (link URL)</label><br />
+                    <input type="text" name="anh_sp"
+                           value="<?php echo isset($_POST['anh_sp']) ? $_POST['anh_sp'] : $arr['anh_sp']; ?>" />
+                    <?php if (isset($error_anh_sp)) { echo $error_anh_sp; } ?>
                 </td>
             </tr>
             <tr>
@@ -142,13 +143,12 @@ if (isset($_POST['submit'])) {
         $chi_tiet_sp = $_POST['chi_tiet_sp'];
     }
 
-    // Ảnh mô tả sản phẩm
-    if (empty($_FILES['anh_sp']['name'])) {
-        $anh_sp = $arr['anh_sp'];
+    // Ảnh mô tả sản phẩm (link URL)
+    if (empty($_POST['anh_sp'])) {
+        $error_anh_sp = '<span style="color:red;">Vui lòng nhập link ảnh sản phẩm</span>';
+        $error = true;
     } else {
-        $anh_sp = $_FILES['anh_sp']['name'];
-        $tmp = $_FILES['anh_sp']['tmp_name'];
-        move_uploaded_file($tmp, 'anh/' . $anh_sp);
+        $anh_sp = trim($_POST['anh_sp']);
     }
 
     // Danh mục sản phẩm

@@ -87,11 +87,19 @@ if (isset($_POST['submit'])) {
                 VALUES ($id_donhang, $id_sp, '$ten_sanpham', $gia_sp, 1, $thanh_tien)";
         mysqli_query($conn, $sql);
 
-        // Redirect sau khi xử lý form
-        header('location: index.php?page_layout=hoanthanh');
+        // Redirect sau khi xử lý form (dùng JS để tránh lỗi header already sent)
+        echo '<script>window.location.href="index.php?page_layout=hoanthanh";</script>';
         exit(); // Đảm bảo thoát sau khi điều hướng
     }  
     ob_end_flush();  
+}
+
+// Nếu khách đã đăng nhập và chưa submit, tự động điền thông tin mặc định
+if (!isset($ten) && isset($_SESSION['khachhang'])) {
+    $ten  = $_SESSION['khachhang']['ten_khachhang'] ?? '';
+    $mail = $_SESSION['khachhang']['email'] ?? '';
+    $dt   = $_SESSION['khachhang']['so_dien_thoai'] ?? '';
+    $dc   = $_SESSION['khachhang']['dia_chi'] ?? '';
 }
 
 // Nếu không có form POST, lấy ID sản phẩm từ URL và hiển thị form

@@ -1,6 +1,6 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8 pb-4 border-b-2 border-blue-600">
-        Giới Thiệu Công Ty Phụ Tùng Xe Hạnh Phương
+        Giới Thiệu Shop Thu Minh
     </h1>
     
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -9,7 +9,7 @@
             Thông Tin Chung
         </h2>
         <div class="space-y-3 text-gray-700">
-            <p><strong class="text-blue-600">Tên công ty:</strong> Công ty TNHH Phụ Tùng Xe Hạnh Phương</p>
+            <p><strong class="text-blue-600">Tên cửa hàng:</strong> Shop Thu Minh</p>
             <p><strong class="text-blue-600">Địa chỉ trụ sở chính:</strong> S1.10 Vinhomes Ocean Park - Đa Tốn - Gia Lâm - Hà Nội</p>
             <p><strong class="text-blue-600">Điện thoại:</strong> 0368.686.868 (chính) - 0388.468.999 (phụ)</p>
             <p><strong class="text-blue-600">Email:</strong> Contact@hp.vn</p>
@@ -25,7 +25,7 @@
             Về Chúng Tôi
         </h2>
         <p class="text-gray-700 mb-4">
-            <strong>Phụ Tùng Xe Hạnh Phương</strong> là đơn vị chuyên cung cấp phụ tùng xe máy, xe ô tô chính hãng với hơn 10 năm kinh nghiệm trong ngành. Chúng tôi tự hào là đối tác tin cậy của hàng nghìn khách hàng trên toàn quốc.
+            <strong>Shop Thu Minh</strong> là đơn vị chuyên cung cấp phụ tùng xe máy, xe ô tô chính hãng với hơn 10 năm kinh nghiệm trong ngành. Chúng tôi tự hào là đối tác tin cậy của hàng nghìn khách hàng trên toàn quốc.
         </p>
         <p class="text-gray-700 mb-4">
             Với phương châm <strong>"Chất lượng - Uy tín - Giá tốt"</strong>, chúng tôi cam kết mang đến cho khách hàng những sản phẩm phụ tùng chính hãng, chất lượng cao với giá cả hợp lý nhất thị trường.

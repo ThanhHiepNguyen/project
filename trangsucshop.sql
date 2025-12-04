@@ -1,100 +1,88 @@
-
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+-- --------------------------------------------------------
+-- Tạo bảng `dmsanpham` (Danh mục sản phẩm)
+-- --------------------------------------------------------
+CREATE TABLE `dmsanpham` (
+  `id_dm` int(10) NOT NULL AUTO_INCREMENT,
+  `ten_dm` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_dm`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Chèn dữ liệu vào bảng `dmsanpham`
+INSERT INTO `dmsanpham` (`id_dm`, `ten_dm`) VALUES
+(1, 'Phụ tùng gầm'),
+(2, 'Phụ tùng động cơ'),
+(3, 'Phụ tùng điện lạnh'),
+(4, 'Phụ tùng thân vỏ'),
+(5, 'Dầu nhờn - Phụ gia ô tô'),
+(6, 'Phụ tùng nội thất');
 
+-- --------------------------------------------------------
+-- Tạo bảng `dmphutung_con` (Danh mục phụ tùng con)
+-- --------------------------------------------------------
+CREATE TABLE `dmphutung_con` (
+  `id_dm_con` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_dm` INT(10) NOT NULL, -- tham chiếu tới dmsanpham.id_dm
+  `ten_dm_con` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id_dm_con`),
+  KEY `id_dm` (`id_dm`),
+  CONSTRAINT `dmphutung_con_ibfk_1` FOREIGN KEY (`id_dm`) REFERENCES `dmsanpham` (`id_dm`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Chèn dữ liệu vào bảng `dmphutung_con`
+INSERT INTO `dmphutung_con` (`id_dm`, `ten_dm_con`) VALUES
+(1, 'Thước lái'),
+(1, 'Cây láp'),
+(2, 'Bugi'),
+(2, 'Lọc dầu động cơ'),
+(3, 'Dàn nóng'),
+(3, 'Dàn lạnh'),
+(4, 'Đèn hậu'),
+(4, 'Đèn pha'),
+(5, 'Nước làm mát động cơ'),
+(6, 'Màn hình'),
+(6, 'Gương chiếu hậu');
+
+-- --------------------------------------------------------
+-- Tạo bảng `blsanpham` (Bình luận sản phẩm)
+-- --------------------------------------------------------
 CREATE TABLE `blsanpham` (
-  `id_bl` int(10) NOT NULL,
+  `id_bl` int(10) NOT NULL AUTO_INCREMENT,
   `id_sp` int(10) NOT NULL,
   `ten` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `dien_thoai` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `binh_luan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ngay_gio` datetime NOT NULL
+  `ngay_gio` datetime NOT NULL,
+  PRIMARY KEY (`id_bl`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `blsanpham`
---
-
+-- Chèn dữ liệu vào bảng `blsanpham`
 INSERT INTO `blsanpham` (`id_bl`, `id_sp`, `ten`, `dien_thoai`, `binh_luan`, `ngay_gio`) VALUES
 (0, 29, 'Võ Minh Hạnh', '00000', 'fdsfsdgfsg', '2024-08-26 20:55:28');
 
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `chitiet_donhang`
---
-
+-- Tạo bảng `chitiet_donhang` (Chi tiết đơn hàng)
+-- --------------------------------------------------------
 CREATE TABLE `chitiet_donhang` (
-  `id_chitiet` int(11) NOT NULL,
+  `id_chitiet` int(11) NOT NULL AUTO_INCREMENT,
   `id_donhang` int(11) DEFAULT NULL,
   `id_sanpham` int(11) DEFAULT NULL,
   `ten_sanpham` varchar(255) DEFAULT NULL,
   `gia` float DEFAULT NULL,
   `so_luong` int(11) DEFAULT NULL,
-  `thanh_tien` float DEFAULT NULL
+  `thanh_tien` float DEFAULT NULL,
+  PRIMARY KEY (`id_chitiet`),
+  KEY `id_donhang` (`id_donhang`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `chitiet_donhang`
---
-
-INSERT INTO `chitiet_donhang` (`id_chitiet`, `id_donhang`, `id_sanpham`, `ten_sanpham`, `gia`, `so_luong`, `thanh_tien`) VALUES
-(1, 1, 22, 'Dây chuyền bạc nữ đính đá CZ 2 trái tim ghép đôi', 786000, 1, 786000),
-(75, 63, 37, 'Kiềng cưới Vàng 18K đính đá ECZ PNJ Trầu Cau', 62879000, 3, 188637000),
-(76, 64, 37, 'Kiềng cưới Vàng 18K đính đá ECZ PNJ Trầu Cau', 62879000, 3, 188637000),
-(77, 65, 37, 'Kiềng cưới Vàng 18K đính đá ECZ PNJ Trầu Cau', 62879000, 5, 314395000),
-(78, 65, 2, 'Nhẫn đôi bạc đính đá CZ All Of Love', 863000, 3, 2589000),
-(79, 66, 39, 'Kiềng cưới Vàng 18K PNJ Trầu Cau', 5260000, 2, 10520000),
-(80, 66, 37, 'Kiềng cưới Vàng 18K đính đá ECZ PNJ Trầu Cau', 62879000, 3, 188637000),
-(81, 66, 34, 'Hạt charm bạc nữ DIY đính đá CZ hoa tuyết Ophelia', 676000, 1, 676000),
-(82, 67, 29, 'Lắc tay vàng 18K nữ đính kim cương tự nhiên hình cỏ 4 lá Keelin', 7917000, 7, 55419000),
-(83, 67, 34, 'Hạt charm bạc nữ DIY đính đá CZ hoa tuyết Ophelia', 676000, 3, 2028000),
-(84, 68, 39, 'Kiềng cưới Vàng 18K PNJ Trầu Cau', 5260000, 1, 5260000),
-(85, 69, 29, 'Lắc tay vàng 18K nữ đính kim cương tự nhiên hình cỏ 4 lá Keelin', 7917000, 1, 7917000),
-(86, 70, 34, 'Hạt charm bạc nữ DIY đính đá CZ hoa tuyết Ophelia', 676000, 1, 676000),
-(87, 71, 34, 'Hạt charm bạc nữ DIY đính đá CZ hoa tuyết Ophelia', 676000, 1, 676000),
-(88, 72, 23, 'Dây chuyền bạc nữ đính đá CZ đôi thiên nga', 757000, 1, 757000),
-(89, 73, 34, 'Hạt charm bạc nữ DIY đính đá CZ hoa tuyết Ophelia', 676000, 1, 676000),
-(90, 74, 37, 'Kiềng cưới Vàng 18K đính đá ECZ PNJ Trầu Cau', 62879000, 1, 62879000);
-
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `dmsanpham`
---
-
-CREATE TABLE `dmsanpham` (
-  `id_dm` int(10) NOT NULL,
-  `ten_dm` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `dmsanpham`
---
-
-INSERT INTO `dmsanpham` (`id_dm`, `ten_dm`) VALUES
-(1, 'Nhẫn'),
-(2, 'Dây chuyền'),
-(3, 'Bông tai'),
-(4, 'Lắc tay'),
-(5, 'Charm'),
-(6, 'Kiềng'),
-(7, 'Vòng'),
-(8, 'Mặt dây chuyền');
-
+-- Tạo bảng `donhang` (Đơn hàng)
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `donhang`
---
-
 CREATE TABLE `donhang` (
-  `id_donhang` int(11) NOT NULL,
+  `id_donhang` int(11) NOT NULL AUTO_INCREMENT,
   `id_khachhang` int(11) DEFAULT NULL,
   `ten_khachhang` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -103,36 +91,16 @@ CREATE TABLE `donhang` (
   `tong_gia` float NOT NULL,
   `ngay_dat` datetime DEFAULT current_timestamp(),
   `trang_thai` enum('Chờ giao hàng','Đang giao hàng','Đã thanh toán') DEFAULT 'Chờ giao hàng',
-  `phuong_thuc_thanh_toan` enum('Tiền mặt','Chuyển khoản ngân hàng','Ví MOMO') DEFAULT 'Tiền mặt'
+  `phuong_thuc_thanh_toan` enum('Tiền mặt','Chuyển khoản ngân hàng','Ví MOMO') DEFAULT 'Tiền mặt',
+  PRIMARY KEY (`id_donhang`),
+  KEY `id_khachhang` (`id_khachhang`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `donhang`
---
-
-INSERT INTO `donhang` (`id_donhang`, `ten_khachhang`, `email`, `so_dien_thoai`, `dia_chi`, `tong_gia`, `ngay_dat`, `trang_thai`, `phuong_thuc_thanh_toan`) VALUES
-(1, 'Võ Minh Hạnh', 'hanhneeeeeee@gmail.com', '01234', 'Vượng Lộc, Can Lộc, Hà Tĩnh', 786000, '2024-08-16 16:35:07', 'Đang giao hàng', 'Tiền mặt'),
-(63, 'Nguyễn Minh Phương', 'phuongminh@gmail.com', '999', '166/1c ấp đông 1 thới tam thôn', 188637000, '2024-08-24 13:29:50', 'Đã thanh toán', 'Ví MOMO'),
-(64, 'võ minh hanh', 'mail@gmail.com', '1234', 'Vượng Lộc, Can Lộc, Hà Tĩnh', 188637000, '2024-08-24 13:33:59', 'Chờ giao hàng', 'Chuyển khoản ngân hàng'),
-(65, 'uu', 'kaka@gmail.com', '666', '166/1c ấp đông 1 thới tam thôn', 316984000, '2024-08-24 13:36:32', 'Chờ giao hàng', 'Tiền mặt'),
-(66, 'Nguyễn Phương', 'phuongminh@gmail.com', '111', 'sddd', 199833000, '2024-08-24 21:44:52', 'Đang giao hàng', 'Chuyển khoản ngân hàng'),
-(67, 'Toàn', 'hanhneeeeeee@gmail.com', '0202', '166/1c ấp đông 1 thới tam thôn', 57447000, '2024-08-26 14:55:36', 'Chờ giao hàng', 'Tiền mặt'),
-(68, 'Như Ngọc', 'mail@gmail.com', '66', 'Vượng Lộc, Can Lộc, Hà Tĩnh', 5260000, '2024-08-26 20:03:25', 'Chờ giao hàng', 'Chuyển khoản ngân hàng'),
-(69, 'Phương Nguyễn Minh', 'phuongminh@gmail.com', '1212', '166/1c ấp đông 1 thới tam thôn', 7917000, '2024-08-26 21:11:31', 'Chờ giao hàng', 'Tiền mặt'),
-(70, 'võ hanh', 'hanhneeeeeee@gmail.com', '6667', 'uu', 676000, '2024-08-26 23:28:18', 'Đã thanh toán', 'Tiền mặt'),
-(71, 'Võ Minh Hạnh', 'a@gmail.com', '123213', 'fdf', 676000, '2024-08-27 09:47:25', 'Đang giao hàng', 'Tiền mặt'),
-(72, 'họgghk', 'hanhneeeeeee@gmail.com', '55', '166/1c ấp đông 1 thới tam thôn', 757000, '2024-08-27 09:52:31', 'Chờ giao hàng', 'Tiền mặt'),
-(73, 'Võ Minh Hạnh', 'phuongminh@gmail.com', '123', 'uu', 676000, '2024-08-28 19:56:02', 'Chờ giao hàng', 'Tiền mặt'),
-(74, 'heka', 'wmail@gmail.com', '888888888', 'sddd', 62879000, '2024-08-28 19:59:39', 'Chờ giao hàng', 'Tiền mặt');
-
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `sanpham`
---
-
+-- Tạo bảng `sanpham` (Sản phẩm)
+-- --------------------------------------------------------
 CREATE TABLE `sanpham` (
-  `id_sp` int(11) UNSIGNED NOT NULL,
+  `id_sp` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_dm` int(11) UNSIGNED NOT NULL,
   `ten_sp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `anh_sp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -142,257 +110,224 @@ CREATE TABLE `sanpham` (
   `dac_biet` int(1) NOT NULL,
   `chi_tiet_sp` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `so_luong` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `so_luong_da_ban` int(11) UNSIGNED NOT NULL DEFAULT 0
+  `so_luong_da_ban` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_sp`),
+  KEY `id_dm` (`id_dm`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `sanpham`
---
 
-INSERT INTO `sanpham` (`id_sp`, `id_dm`, `ten_sp`, `anh_sp`, `gia_sp`, `khuyen_mai`, `trang_thai`, `dac_biet`, `chi_tiet_sp`, `so_luong`) VALUES
-(2, 1, 'Nhẫn đôi bạc đính đá CZ All Of Love', 'nhan2.jpg', '863000', 'Không', 'Lượng hàng trong kho thấp', 0, 'Hẳn là người ấy và bạn sẽ đều rất vui và hạnh phúc khi cùng sở hữu kỷ vật tình yêu rất đẹp và ý nghĩa này, mà nhất là khi nó lại có thể đi cùng các bạn qua thời gian. Nhẫn đôi bạc All Of Love được làm từ bạc S925 cao cấp, điểm nhấn bởi viên đá Cubic Zirconia sang trọng và được chế tác hết sức tỉ mỉ bởi những nghệ nhân lành nghề. Chúc cặp đôi luôn hạnh phúc và sánh bước bên nhau cùng kỷ vật này nhé !!', 20),
-(3, 1, 'Nhẫn bạc nữ đính đá CZ hoa bướm', 'nhan3.jpg', '620000', 'Không', 'Lượng hàng trong kho thấp', 0, 'Chiếc nhẫn bạc S925 được trang trí, tạo điểm nhấn bằng nhiều viên đá Cubic Zirconia vô cùng sang trọng. Dù bạn dùng em nó để đi dự tiệc, đi chơi hay đi làm, thì bạn sẽ luôn toát lên vẻ kiều diễm, duyên dáng và thanh lịch. Chắc chắn đây sẽ là 1 trong những items xứng đáng nhất trong tủ trang sức của bạn đó!', 20),
-(4, 1, 'Nhẫn bạc nữ đính kim cương Moissanite Scarlett', 'nhan4.jpg', '935000', 'Không', 'Còn hàng', 0, 'Sản phẩm được làm từ bạc S925 mạ bạch kim, đính kim cương Moissanite 0,5 carat với thiết kế đan xen vào sự độc đáo là một chút dịu dàng, mang đến vẻ đẹp vừa nhẹ nhàng lại vừa năng động. Dù bạn kết hợp chiếc nhẫn xinh xắn này với trang phục nào đi nữa thì đây cũng là dấu ấn thật sự tuyệt vời cho bạn!', 100),
-(5, 1, 'Nhẫn bạc nữ đính đá CZ hình bông hoa đào', 'nhan5.jpg', '632000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn bạc S925 đính đá Cubic Zirconia với thiết kế hình bông hoa đào thống nhất khoe trọn vẻ đẹp nữ tính, rạng rỡ của người đeo nên thường được phái mạnh sử dụng làm món quà bất ngờ và vô cùng ý nghĩa cho nàng như lời gửi gắm, truyền tải những tâm tư và tình cảm chân thành dành cho nàng.', 100),
-(6, 1, 'Nhẫn bạc nữ mạ vàng đính đá CZ cây ô liu', 'nhan6.jpg', '817000', 'Không', 'Còn hàng', 1, 'Nếu bạn đang tìm kiếm một sản phẩm vừa đẹp, tinh tế về thẩm mỹ, vừa mang ý nghĩa mang lại may mắn, nhất là về tiền tài thì thiết kế nhẫn LILI_114577 là dành cho bạn đó. Em nó được làm từ bạc 92.5% nguyên chất, mạ vàng cao cấp, được các nghệ nhân chế tác một cách tỉ mỉ, tinh sảo. Món trang sức bạc này sẽ giúp bạn thêm phần đáng yêu và thu hút đó. Hãy tỏa sáng cùng em nó nhé !!', 100),
-(7, 1, 'Nhẫn bạc nữ mạ vàng 18k đính đá CZ hình trái tim', 'nhan7.jpg', '601000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn được làm từ bạc 925 mạ vàng 18k với điểm nhấn là viên đá Cubic Zirconia hình trái tim. Được lấy cảm hứng từ những trái tim lãng mạn, e thẹn và ngọt ngào. Những trái tim nho nhỏ đính những viên đá Cubic Zirconia nổi bật đeo ở ngón tay bạn như được nhắc nhở rằng mình vẫn đang được yêu thương dù có đang cô đơn thế nào đi nữa. Đây là cách ghi nhớ thông điệp tình yêu rất duyên dáng, ý nhị, mà vẫn rất tươi sáng và trẻ trung.', 100),
-(8, 1, 'Nhẫn bạc nữ đính kim cương Moissanite Elfleda', 'nhan8.jpg', '1070000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn cao cấp được làm từ bạc S925 đính viên kim cương Moissanite 1 carat. Nó sẽ mang đến cho bạn sự sang trọng và quý phái. Dù trong hoàn cảnh nào: đi làm, đi dự tiệc hay đi chơi với bạn bè, đôi tay của bạn sẽ cực kỳ nổi bật đấy.', 100),
-(9, 1, 'Nhẫn bạc nữ mạ vàng đính đá CZ Ares', 'nhan9.jpg', '637000', 'Không', 'Còn hàng', 0, 'Nếu bạn đang tìm kiếm một sản phẩm vừa đẹp, tinh tế về thẩm mỹ, vừa mang ý nghĩa mang lại may mắn thì thiết kế nhẫn bạc này là dành cho bạn đó. Em nó được làm từ bạc 92.5% nguyên chất, với tùy chọn mạ vàng cao cấp, được các nghệ nhân chế tác một cách tỉ mỉ, tinh sảo. Món trang sức bạc này sẽ giúp bạn thêm phần đáng yêu và thu hút đó. Hãy tỏa sáng cùng em nó nhé !!', 100),
-(10, 1, 'Nhẫn bạc nữ may mắn Lucky Day', 'nhan10.jpg', '647000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn được làm từ bạc S925 cao cấp, mang thiết kế chữ Lucky ở trung tâm vô cùng thời trang và phong cách sẽ là sự lựa chọn hoàn hảo cho các cô gái cá tính, trẻ trung, phóng khoáng. Chiếc nhẫn may mắn này kết hợp với cá tính của bạn chắc chắn sẽ khiến bạn vô cùng đặc biệt đấy!', 100),
-(11, 1, 'Nhẫn bạc nữ đính kim cương Moissanite hình ngôi sao 6 cánh Gianna', 'nhan11.jpg', '898000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn được làm từ bạc S925 mạ vàng trắng, đính kim cương Moissanite 1 carat với thiết kế hình ngôi sao 6 cánh đan xen vào sự độc đáo là một chút dịu dàng, mang đến vẻ đẹp vừa nhẹ nhàng lại vừa năng động. Dù bạn kết hợp chiếc nhẫn xinh xắn này với trang phục nào đi nữa thì đây cũng là dấu ấn thật sự tuyệt vời cho bạn!', 100),
-(12, 1, 'Nhẫn bạc nữ đính pha lê Aurora cá xinh xắn', 'nhan12.jpg', '653000', 'Không', 'Còn hàng', 1, 'Chiếc nhẫn được làm từ bạc S925 được đính viên pha lê Aurora hình chú cá xinh xắn. Một phong cách thiết kế tượng trưng cho sự nữ tính, thanh lịch. Chắc hẳn bạn cũng như bất cứ cô gái nào cũng muốn mình trở thành chủ nhân của một chiếc nhẫn đặc biệt này đấy!', 100),
-(13, 1, 'Nhẫn bạc nam đính kim cương Moissanite Kane', 'nhan13.jpg', '1415000', 'Không', 'Còn hàng', 1, 'Sản phẩm làm từ bạc S925 đính kim cương Moissanite 1 carat sở hữu vẻ đẹp vừa quý phái lại vừa hiện đại, cho phép bạn sáng tạo, mix match cùng những món trang sức cũng như trang phục khác nhau, sẽ giúp bạn nổi bật và thu hút mọi ánh nhìn dù bạn xuất hiện ở đâu, dạo phố, cafe, tiệc tùng hay đi làm. Đừng ngạc nhiên khi nhiều ánh mắt hướng về bạn vì sự tinh tế này nhé !!', 100),
-(14, 1, 'Nhẫn bạc nam dạng xoay tròn hình hoa văn Francis', 'nhan14.jpg', '1484000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn làm từ bạc S925 với thiết kế dạng xoay tròn hình hoa văn mang đến cho bạn sự tinh tế và thanh thoát mỗi khi ra ngoài. Với sự tỉ mỉ trong từng đường nét thiết kế, bạn sẽ trở nên hoàn hảo hơn khi đeo chiếc nhẫn này đấy!', 100),
-(15, 1, 'Nhẫn bạc nam đính đá CZ hình vương miện Romeo', 'nhan15.jpg', '1081000', 'Không', 'Còn hàng', 1, 'Chiếc nhẫn làm từ bạc S925 đính đá Cubic Zirconia với thiết kế hình vương miện mang đến vẻ đẹp vừa thanh lịch lại vừa năng động. Dù bạn kết hợp chiếc nhẫn này với trang phục nào đi nữa thì đây cũng là dấu ấn thật sự tuyệt vời cho bạn đó!', 100),
-(16, 1, 'Nhẫn bạc nam đính đá CZ Antonio', 'nhan16.jpg', '824000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn được làm từ bạc S925 đính đá Cubic Zirconia mang đến sự cuốn hút toát lên vẻ sang chảnh và nổi bật cho bạn. Chắc chắn em nó sẽ là một trong những items xứng đáng nhất trong tủ trang sức của bạn đó!', 100),
-(17, 1, 'Nhẫn cặp đôi bạc đính kim cương Moissanite Theophilus', 'nhan17.jpg', '1346000', 'Không', 'Còn hàng', 1, 'Cặp nhẫn được làm từ bạc S925 đính viên kim cương Moissanite 1 carat sở hữu vẻ đẹp vừa quý phái lại vừa hiện đại, mang hơi hướng của sự phóng khoáng, là món phụ kiện không thể thiếu đối với mỗi cô gái, chàng trai, rất phù hợp khi làm quà tặng, cầu hôn, đính hôn, nhẫn cưới,… Chiếc nhẫn là món trang sức với kiểu dáng, thiết kế, màu sắc tinh tế và là đại diện cho mỗi phong cách khác nhau giúp chàng và nàng tự tin xuống phố, hội họp bạn bè hay dự một buổi tiệc tùng nào đó.', 100),
-(18, 1, 'Nhẫn cặp đôi bạc mạ bạch kim trơn đơn giản Black And White', 'nhan18.jpg', '1037000', 'Không', 'Còn hàng', 0, 'Cặp nhẫn được làm từ bạc 925 sở hữu vẻ đẹp vừa quý phái lại vừa hiện đại, mang hơi hướng của sự phóng khoáng, là món phụ kiện không thể thiếu đối với mỗi cô gái, chàng trai. Em nó là món trang sức với kiểu dáng, thiết kế, màu sắc tinh tế và là đại diện cho mỗi phong cách khác nhau giúp chàng và nàng tự tin xuống phố, hội họp bạn bè hay dự một buổi tiệc tùng nào đó.\r\n\r\nVới cặp nhẫn màu đen, quá trình chuyển từ màu đen -> xám -> trắng (diễn ra trong khoảng 1-2 tháng) tượng trưng cho từng cột mốc vượt qua các khó khăn để bên nhau trọn đời.', 100),
-(19, 1, 'Nhẫn bạc nữ mạ vàng xếp chồng đính đá Garnet, CZ vương miện Niche đẹp', 'nhan19.jpg', '1007000', 'Không', 'Còn hàng', 1, 'Chiếc nhẫn được làm từ bạc S925 với thiết kế dạng xếp chồng, đính viên đá Garnet kết hợp Cubic Zirconia hình vương miện cao cấp. Đá Garnet là biểu tượng của vẻ đẹp, tình yêu và sự vĩnh hằng nên dù bạn kết hợp chiếc nhẫn xinh xắn này với trang phục nào đi nữa thì đây cũng là dấu ấn thật sự tuyệt vời cho bạn!', 100),
-(20, 1, 'Nhẫn bạc nữ đính đá CZ hình cành và lá Natalie', 'nhan20.jpg', '740000', 'Không', 'Còn hàng', 0, 'Chiếc nhẫn được làm bằng bạc S925 đính đá Cubic Zirconia với thiết kế hình cành và lá mang đến sự cuốn hút toát lên vẻ sang chảnh và nổi bật cho bạn. Chắc chắn em nó sẽ là một trong những items xứng đáng nhất trong tủ trang sức của bạn đó!', 100),
-(21, 2, 'Dây chuyền đôi bạc đính đá Opal Obsidian thiên thần ác quỷ', 'daychuyen1.jpg', '1415000', 'Không', 'Còn hàng', 1, 'Nếu bạn đang tìm kiếm một mẫu trang sức trang sức đẹp, tinh tế cho cặp đôi thì dây chuyền đôi LILI_979263 hoàn toàn thỏa mãn điều đó. Dây chuyền làm từ bạc S925 mạ vàng, đính đá quý Opal và Obsidian cao cấp. Với thiết kế thiên thần và ác quỷ, là biểu tượng của sự hòa hợp âm dương, biểu trưng cho hôn nhân viên mãn, hạnh phúc, chung thủy, sự tương sinh, tương hỗ, bổ trợ cho nhau. Trong phong thủy, sự kết hợp này giúp đường tình duyên, hôn nhân tốt đẹp hơn. Chắc chắn cặp dây chuyền LILI_979263 sẽ không thể trong bộ sưu tập của các đôi tình nhân.', 100),
-(22, 2, 'Dây chuyền bạc nữ đính đá CZ 2 trái tim ghép đôi', 'daychuyen2.jpg', '786000', 'Không', 'Còn hàng', 1, 'Bạn sẽ không chỉ thêm phần xinh xắn và thanh lịch khi diện em dây chuyền 2 trái tim ghép đôi này, mà còn thể hiện gu thẩm mỹ rất riêng cùng tình yêu rộng lớn đấy nhé. Hãy tưởng tượng bạn sẽ duyên dáng và thu hút làm sao khi bạn diện chiếc vòng cổ này đi làm, đi hẹn hò hay đi chơi với bạn bè. Dây chuyền bạc nữ 2 trái tim ghép đôi LILI_763116 được làm từ bạc 925 chuyên dụng mạ vàng hồng, điểm nhấn bởi những viên đá Cubic Zirconia cao cấp và được chế tác hết sức tỉ mỉ bởi những nghệ nhân lành nghề. Cùng em nó ra ngoài và tỏa sáng thôi nào !!', 100),
-(23, 2, 'Dây chuyền bạc nữ đính đá CZ đôi thiên nga', 'daychuyen3.jpg', '757000', 'Không', 'Còn hàng', 1, 'Bạn sẽ không chỉ thêm phần xinh xắn và thanh lịch khi diện em dây chuyền bạc đôi thiên nga này, mà nó còn biểu trưng cho sự tình yêu chung thủy, sự đẹp đẽ và thánh thiện. Hãy tưởng tượng bạn sẽ duyên dáng và thu hút làm sao khi bạn diện chiếc vòng cổ này đi làm, đi hẹn hò hay đi chơi với bạn bè. Dây chuyền bạc nữ đôi thiên nga đính đá CZ LILI_879835 được làm từ bạc 925 chuyên dụng , điểm nhấn bởi những viên đá Cubic Zirconia cao cấp và được chế tác hết sức tỉ mỉ bởi những nghệ nhân lành nghề. Cùng em nó ra ngoài và tỏa sáng thôi nào !!', 99),
-(24, 2, 'Dây chuyền bạc nữ 2 tầng đính đá CZ Keisha', 'daychuyen4.jpg', '981000', 'Không', 'Còn hàng', 1, 'Bạn sẽ thêm phần xinh xắn và thanh lịch khi diện em dây chuyền bạc 2 tầng này đấy. Hãy tưởng tượng bạn sẽ duyên dáng và thu hút làm sao khi bạn diện chiếc vòng cổ này đi làm, đi hẹn hò hay đi chơi với bạn bè. Dây chuyền bạc nữ 2 tầng LILI_717374 được làm từ bạc 925 chuyên dụng , điểm nhấn bởi những viên đá Cubic Zirconia cao cấp và được chế tác hết sức tỉ mỉ bởi những nghệ nhân lành nghề. Cùng em nó ra ngoài và tỏa sáng thôi nào !!', 100),
-(25, 3, 'Bông tai bạc Ý S925 nữ mạ bạch kim đính đá CZ hình trái tim', 'bongtai1.jpg', '671000', 'Không', 'Còn hàng', 1, 'Chiếc bông tai được làm từ bạc S925 đính đá Cubic Zirconia cao cấp hình trái tim với thiết kế là lựa chọn hoàn hảo cho bạn trong những trang phục dự tiệc trang trọng và là một chiếc khuyên không thể thiếu cho những bạn đã bấm khuyên tai. Bạn có muốn cùng em nó hóa trang thành nàng công chúa lộng lẫy không nào?', 100),
-(26, 3, 'Bông tai bạc nữ đính đá CZ, ngọc trai Fidelma', 'bongtai2.jpg', '586000', 'Không', 'Còn hàng', 1, 'Chiếc bông tai được làm bằng bạc S925 đính đá Cubic Zirconia, ngọc trai cao cấp. Khoác lên mình thiết kế bất đối xứng độc đáo, mang đến vẻ đẹp kiêu kỳ, cá tính và sự trẻ trung cho cô nàng sở hữu. Đây cũng là món quà ý nghĩa mà phái mạnh có thể dành cho phái đẹp như thể hiện sự nâng niu, trân trọng, và bảo vệ người phụ nữ mình yêu.', 100),
-(27, 3, 'Bông tai bạc Ý S925 nữ dạng nụ mạ bạch kim đính đá CZ cỏ 4 lá', 'bongtai3.jpg', '625000', 'Không', 'Còn hàng', 0, 'Sản phẩm được làm từ bạc Ý S925 đính đá Cubic Zirconia cao cấp hình cỏ 4 lá, là một chiếc khuyên không thể thiếu cho những bạn đã bấm khuyên tai. Chiếc bông tai vô cùng phù hợp dùng để đeo đi học, đi làm văn phòng mà không gây bất tiện nhưng vẫn giúp bạn khoe được cá tính của mình. Với sự tỉ mỉ trong từng đường nét thiết kế, bạn sẽ trở nên hoàn hảo hơn khi đeo bông tai này đấy!', 100),
-(28, 3, 'Bông tai giả kẹp bạc nữ/nam Make Love', 'bongtai4.jpg', '877000', 'Không', 'Còn hàng', 0, 'Sản phẩm được làm từ bạc S925 chứa 92,5% bạc nguyên chất, với phong cách thiết kế mang đến cho bạn sự tinh tế và thanh thoát mỗi khi ra ngoài. Bạn đã sẵn sàng để tỏa sáng và thu hút mọi ánh nhìn cùng em nó chưa nào !!', 100),
-(29, 4, 'Lắc tay vàng 18K nữ đính kim cương tự nhiên hình cỏ 4 lá Keelin', 'lactay1.jpg', '7917000', 'Không', 'Còn hàng', 1, 'Chiếc lắc tay làm từ vàng hồng 18K đính kim cương tự nhiên, sở hữu vẻ đẹp vừa quý phái lại vừa hiện đại, là món phụ kiện không thể thiếu đối với mỗi cô gái, đại diện cho mỗi phong cách khác nhau giúp nàng tự tin xuống phố, hội họp bạn bè hay dự một buổi tiệc tùng nào đó. Đừng ngạc nhiên khi nhiều ánh mắt hướng về bạn vì sự tinh tế này nhé !!', 92),
-(30, 4, 'Lắc tay bạc cặp đôi tình yêu Forever Love', 'lactay2.jpg', '1200000', 'Không', 'Còn hàng', 1, 'Lấy cảm hứng từ vòng tròn vô cực, tượng trưng cho vẻ đẹp bền chặt vĩnh cửu của tình yêu đôi lứa, lắc bạc LILI_986852 được thiết kế một cách tinh xảo, với chất liệu bạc S925 cao cấp, sang trọng. Món trang sức không chỉ giúp bạn trông thật thanh lịch và duyên dáng, mà còn như như một tín hiệu của tình yêu và hạnh phúc. Chúc bạn luôn hạnh phúc bên gia đình và người thương !!', 100),
-(31, 4, 'Lắc tay bạc nữ mạ bạch kim đính đá CZ cỏ 4 lá', 'lactay3.jpg', '816000', 'Không', 'Còn hàng', 0, 'Chiếc lắc được làm từ bạc 925 mạ bạch kim đính 2 viên đá Cubic Zirconia được chế tác tỉ mỉ. Với thiết kế hình cỏ bốn lá thống nhất khoe trọn vẻ đẹp nữ tính, rạng rỡ của người đeo nên thường được phái mạnh sử dụng làm món quà bất ngờ và vô cùng ý nghĩa cho nàng như lời gửi gắm, truyền tải những tâm tư và tình cảm chân thành dành cho nàng.', 100),
-(32, 4, 'Lắc tay bạc nữ đính đá CZ hình trái tim Heart Of The Sea', 'lactay4.jpg', '1188000', 'Không', 'Còn hàng', 0, 'Sản phẩm được làm từ bạc S925 cao cấp được tô điểm bằng những viên đá Cubic Zirconia hình trái tim bao quanh. Chiếc lắc mang đến sự cuốn hút toát lên vẻ sang chảnh và nổi bật cho bạn. Chắc chắn chiếc lắc này sẽ là một trong những items xứng đáng nhất trong tủ trang sức của bạn', 100),
-(33, 5, 'Hạt charm bạc nữ đính đá CZ hình cúc họa mi Eileen', 'charm1.jpg', '984000', 'Không', 'Còn hàng', 1, 'Hạt charm được làm từ bạc S925 đính đá Cubic Zirconia với thiết kế hình hoa cúc họa mi tạo nên phong cách sang trọng và tinh tế cho phái đẹp, giúp nàng luôn cảm thấy tự tin thể hiện bản thân. Chiếc charm xinh xắn này chắc chắn sẽ mang đến vẻ đẹp, sức hút cho bạn đó!', 100),
-(34, 5, 'Hạt charm bạc nữ DIY đính đá CZ hoa tuyết Ophelia', 'charm2.jpg', '676000', 'Không', 'Còn hàng', 1, 'Hạt charm được làm từ bạc S925 đính đá Cubic Zirconia với thiết kế tinh xảo, mang đến vẻ đẹp tinh tế và thu hút ánh nhìn ngay từ những giây phút đầu tiên. Sự hiện diện của chiếc charm không chỉ là điểm nhấn nhá thể hiện phong cách nữ tính mà còn âm thầm thể hiện gu thẩm mỹ, phong cách riêng của bạn!', 93),
-(35, 5, 'Hạt charm bạc nữ DIY đính đá CZ Kendall', 'charm3.jpg', '935000', 'Không', 'Còn hàng', 0, 'Hạt charm được chế tác từ bạc S925 đính đá Cubic Zirconia với thiết kế mang đến cho bạn không chỉ sự thanh lịch mà còn toát lên vẻ tinh tế. Món trang sức rất dễ để phối đồ cho các chị em vì em nó đẹp trong mọi khoảnh khắc !!', 100),
-(36, 5, 'Hạt charm bạc nữ đính đá CZ hình đôi cánh thiên thần Mariana', 'charm4.jpg', '750000', 'Không', 'Còn hàng', 0, 'Hạt charm được chế tác từ bạc S925 đính đá Cubic Zirconia được thiết kế hình đôi cánh thiên thần một cách tỉ mỉ, cuốn hút, không những thể hiện sự nữ tính mà còn âm thầm thể hiện gu thẩm mỹ và phong cách của riêng của bạn!', 100),
-(38, 6, 'Kiềng Vàng trắng Ý 18K', 'kieng2.png', '26300000', 'Không', 'Còn hàng', 0, 'Sở hữu kiểu dáng độc đáo với lối thiết kế hiện đại, chiếc kiềng vàng Ý 18K không chỉ mang vẻ đẹp phá cách mà còn tô điểm nét thời thượng. Chiếc kiềng được chế tác từ vàng Ý 18K và ghi điểm với sự độc lạ sẽ cùng nàng kiêu hãnh tỏa sáng trên mọi bước đường. Sở hữu kiểu dáng mảnh mai, sản phẩm sẽ làm nổi bật vẻ đẹp kiêu sa của nàng.', 100),
-(39, 6, 'Kiềng cưới Vàng 18K PNJ Trầu Cau', 'kieng3.jpg', '5260000', 'Không', 'Còn hàng', 1, 'Chế tác từ vàng 18K trên thiết kế độc đáo, chiếc kiềng cưới mang vẻ đẹp vừa truyền thống lại vừa hiện đại.Lá trầu bên ngoài được tạo nét theo cánh phượng uyển chuyển bao bọc bên trong là quả cau, thể hiện sự hòa quyện giữa miếng trầu và cánh phượng vừa mang đậm tính văn hóa bản sắc dân tộc vừa thể hiện được tình cảm sắt son của đôi lứa.', 97),
-(40, 6, 'Vòng tay bạc nữ dạng kiềng đính đá pha lê Eye of the muse', 'kieng4.jpg', '1267000', 'Không', 'Còn hàng', 0, 'Chiếc vòng được làm từ bạc 925 mạ bạch kim đính đá pha lê Eye of the muse và là một trong những chiếc vòng tay bạc đẹp nhất hiện nay. Sở hữu điểm nhấn là viên pha lê cao cấp cho phép nàng sáng tạo, mix&match cùng những món trang sức cũng như trang phục khác nhau. Sự phản chiếu đa sắc của viên đá pha lê sẽ giúp cho sản phẩm thêm phần huyền ảo trong mắt mọi người, giúp nàng luôn tỏa sáng rực rỡ.', 100);
+INSERT INTO sanpham (
+    id_dm, ten_sp, anh_sp, gia_sp, khuyen_mai, trang_thai, dac_biet,
+    chi_tiet_sp, so_luong, so_luong_da_ban
+) VALUES
+-- 1. Phụ tùng gầm (id_dm = 1)
+(1, 'Thước lái cao cấp', 'https://www.testingautos.com/car_care/images/tie-rod.jpg',
+ '2500000', 'Không', 'Còn hàng', 1,
+ 'Thước lái chịu lực cao, làm từ thép hợp kim chất lượng cao, giúp xe vận hành mượt mà. Được thiết kế đặc biệt cho các loại xe từ 4 đến 7 chỗ, sản phẩm có thể chịu được các tải trọng lớn và đảm bảo độ bền lâu dài. Thời gian bảo hành sản phẩm lên đến 12 tháng. Thước lái này là sự lựa chọn lý tưởng cho những ai tìm kiếm một phụ tùng thay thế chất lượng cao, dễ dàng lắp đặt và bảo trì.', 20, 0),
+(1, 'Cây láp động lực', 'https://zestech.vn/wp-content/uploads/2022/06/cay-lap-la-gi.jpg',
+ '1850000', 'Không', 'Còn hàng', 0,
+ 'Cây láp động lực được làm từ thép hợp kim cao cấp, giúp truyền động mạnh mẽ và giảm rung lắc khi vào cua, nâng cao trải nghiệm lái xe. Sản phẩm có tính năng bền bỉ, tuổi thọ dài và có khả năng chịu nhiệt cao. Cây láp này thích hợp với nhiều dòng xe, giúp cải thiện độ ổn định của xe, đặc biệt là khi di chuyển ở tốc độ cao. Hỗ trợ lắp ráp dễ dàng, giảm thiểu thời gian sửa chữa.', 30, 0),
+
+-- 2. Phụ tùng động cơ (id_dm = 2)
+(2, 'Bugi đánh lửa Iridium', 'https://danchoioto.vn/wp-content/uploads/2021/02/bugi-nickel.jpg.webp',
+ '320000', 'Không', 'Còn hàng', 0,
+ 'Bugi đánh lửa Iridium có khả năng duy trì hiệu suất đánh lửa ổn định trong thời gian dài, giúp động cơ hoạt động mượt mà và tiết kiệm nhiên liệu hơn. Sản phẩm được làm từ vật liệu Iridium, giúp tăng độ bền gấp 2 lần so với các loại bugi thông thường. Nó cũng giúp giảm khí thải và cải thiện khả năng tăng tốc của xe. Bugi này là một sự lựa chọn tuyệt vời để thay thế cho các loại bugi cũ hoặc khi cần nâng cấp hiệu suất động cơ.', 100, 0),
+(2, 'Lọc dầu động cơ cao cấp', 'https://cdn.phutungmitsubishi.vn/media/b%C3%A0i%20vi%E1%BA%BFt/thay-loc-nhot-dong-co%20%281%29.jpg',
+ '260000', 'Không', 'Còn hàng', 0,
+ 'Lọc dầu động cơ cao cấp này được làm từ vật liệu giấy sợi tổng hợp có khả năng giữ bẩn cực kỳ hiệu quả. Sản phẩm giúp lọc sạch các tạp chất trong dầu, bảo vệ động cơ tránh khỏi các hư hỏng do cặn bẩn. Với chất liệu bền bỉ và công nghệ sản xuất tiên tiến, lọc dầu này có thể sử dụng được lâu dài, giúp kéo dài tuổi thọ động cơ và giảm chi phí bảo dưỡng xe. Khuyến nghị thay lọc dầu mỗi 8.000 km để đảm bảo hiệu suất tối ưu cho động cơ.', 80, 0),
+
+-- 3. Phụ tùng điện lạnh (id_dm = 3)
+(3, 'Dàn nóng điều hoà nhôm nguyên khối', 'https://phutungotohp.vn/wp-content/uploads/2022/07/so-do-he-thong-gian-nong-dieu-hoa-tren-o-to.png',
+ '3600000', 'Không', 'Còn hàng', 1,
+ 'Dàn nóng điều hoà được làm từ nhôm nguyên khối với cấu trúc ống phẳng giúp tản nhiệt nhanh chóng và hiệu quả. Dàn nóng này thích hợp cho các dòng xe sedan và SUV, giúp giữ nhiệt độ ổn định trong khoang xe. Được thiết kế để tối ưu hóa hiệu suất làm lạnh, sản phẩm cũng dễ dàng bảo trì và thay thế. Với chất liệu nhôm bền bỉ, dàn nóng này sẽ giúp hệ thống điều hòa xe của bạn hoạt động mượt mà hơn trong suốt mùa hè oi bức.', 12, 0),
+(3, 'Dàn lạnh điều hoà đa lớp', 'https://tuning.vn/media/tintuc/1638982800/dan-lanh-o-to_%284%29.jpg',
+ '2950000', 'Không', 'Còn hàng', 0,
+ 'Dàn lạnh điều hoà này được thiết kế đa lớp giúp tăng cường khả năng làm mát và duy trì nhiệt độ thấp trong xe. Được phủ lớp chống nấm mốc, sản phẩm giúp ngăn ngừa vi khuẩn và mùi hôi khó chịu trong cabin. Dàn lạnh này giúp xe của bạn luôn có không khí trong lành, mát mẻ, và dễ dàng vệ sinh khi cần thiết. Sản phẩm phù hợp với tất cả các dòng xe ô tô và có thể thay thế nhanh chóng, không làm gián đoạn công việc bảo dưỡng của bạn.', 15, 0),
+
+-- 4. Phụ tùng thân vỏ (id_dm = 4)
+(4, 'Đèn hậu LED nguyên cụm', 'https://vietnamgarage.vn/wp-content/uploads/2023/10/Den-Hau-Nguyen-Cum-7.png',
+ '2100000', 'Không', 'Còn hàng', 1,
+ 'Đèn hậu LED nguyên cụm với thiết kế đẹp mắt, ánh sáng LED rõ nét và bền lâu. Đèn hậu này đạt chuẩn E-mark, lắp đặt dễ dàng mà không cần cắt hay hàn, rất phù hợp cho các dòng xe sedan và hatchback. Sản phẩm giúp xe của bạn nổi bật và an toàn hơn khi di chuyển vào ban đêm hoặc trong điều kiện thời tiết xấu. Đèn hậu LED này có tuổi thọ cao và tiết kiệm năng lượng, giúp bạn tiết kiệm chi phí bảo dưỡng lâu dài.', 18, 0),
+(4, 'Đèn pha bi-LED siêu sáng', 'https://cdn.chungauto.vn/uploads/den-o-to/den-led-o-to.jpg',
+ '3500000', 'Không', 'Còn hàng', 1,
+ 'Đèn pha bi-LED siêu sáng với ánh sáng trắng 6000K giúp tầm nhìn xa và rõ hơn khi lái xe vào ban đêm. Đèn pha này sử dụng công nghệ projector, giúp chiếu sáng mạnh mẽ mà không gây chói mắt cho người lái xe khác. Sản phẩm còn được thiết kế với tản nhiệt nhôm đúc, giúp duy trì hiệu suất chiếu sáng lâu dài mà không bị nóng. Đèn pha bi-LED này là sự lựa chọn lý tưởng cho các dòng xe thể thao và sang trọng.', 10, 0),
+
+-- 5. Dầu nhờn - Phụ gia ô tô (id_dm = 5)
+(5, 'Nước làm mát tiêu chuẩn xanh', 'https://focar.vn/Upload/product/green-coolant/avatar-nuoc-lam-mat-tieu-chuan-focar-green-coolant.webp',
+ '190000', 'Không', 'Còn hàng', 0,
+ 'Dung dịch làm mát gốc Ethylene Glycol, giúp làm mát động cơ nhanh chóng, chống gỉ và chống sôi hiệu quả. Sản phẩm được pha sẵn 50/50 và có thể sử dụng cho tất cả các loại xe ô tô, giúp duy trì hiệu suất làm mát và kéo dài tuổi thọ động cơ. Nước làm mát này thích hợp cho mọi điều kiện khí hậu, đặc biệt là trong mùa hè nóng bức, giúp bảo vệ động cơ khỏi quá nhiệt.', 120, 0),
+
+-- 6. Phụ tùng nội thất (id_dm = 6)
+(6, 'Màn hình Android 10 inch', 'https://carcam.vn/data/media/2071/files/Tin%20tuc/tin%20hang%20ngay/carcam-tin-tuc-00001.jpg',
+ '8500000', 'Không', 'Còn hàng', 1,
+ 'Màn hình Android 10 inch với màn hình cảm ứng IPS, RAM 4GB và bộ nhớ trong 64GB, hỗ trợ kết nối CarPlay và Android Auto. Thiết bị này giúp cải thiện trải nghiệm giải trí trên xe, hỗ trợ hiển thị bản đồ, xem phim, nghe nhạc và điều khiển các chức năng xe. Với thiết kế sang trọng và dễ sử dụng, màn hình này là một phụ kiện không thể thiếu cho các dòng xe hiện đại.', 25, 0),
+(6, 'Gương chiếu hậu chống chói', 'https://lifepro.vn/wp-content/uploads/bang-gia-guong-chieu-hau-o-to-va-cach-thay-the-guong-chieu-hau.jpg',
+ '690000', 'Không', 'Còn hàng', 0,
+ 'Gương chiếu hậu chống chói giúp giảm ánh sáng mạnh từ xe phía sau, đảm bảo tầm nhìn tốt hơn khi lái xe vào ban đêm. Gương này có thiết kế thông minh, có khả năng tự điều chỉnh độ sáng và bảo vệ mắt của người lái. Đây là một phụ kiện không thể thiếu cho các tài xế lái xe vào ban đêm, giúp bảo vệ sức khỏe mắt và tăng cường độ an toàn khi lái xe.', 40, 0);
 
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `thanhvien`
---
-
+-- Tạo bảng `thanhvien` (Thành viên)
+-- --------------------------------------------------------
 CREATE TABLE `thanhvien` (
-  `id_thanhvien` int(10) NOT NULL,
+  `id_thanhvien` int(10) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mat_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `vai_tro` enum('chu_shop','nhan_vien') NOT NULL DEFAULT 'nhan_vien'
+  `vai_tro` enum('chu_shop','nhan_vien') NOT NULL DEFAULT 'nhan_vien',
+  PRIMARY KEY (`id_thanhvien`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `thanhvien`
---
 
-INSERT INTO `thanhvien` (`id_thanhvien`, `email`, `mat_khau`, `vai_tro`) VALUES
-(1, 'hanhminhvo18@gmail.com', '123456', 'chu_shop'),
-(2, 'hanhneee@gmail.com', '123456', 'nhan_vien'),
-(4, 'user@gmail.com', '123456', 'nhan_vien');
 
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `khachhang`
---
-
+-- Tạo bảng `khachhang` (Khách hàng)
+-- --------------------------------------------------------
 CREATE TABLE `khachhang` (
-  `id_khachhang` int(11) NOT NULL,
+  `id_khachhang` int(11) NOT NULL AUTO_INCREMENT,
   `ten_khachhang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mat_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `so_dien_thoai` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dia_chi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ngay_dang_ky` datetime DEFAULT current_timestamp()
+  `ngay_dang_ky` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_khachhang`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `yeu_thich`
---
-
+-- Tạo bảng `yeu_thich` (Yêu thích)
+-- --------------------------------------------------------
 CREATE TABLE `yeu_thich` (
-  `id_yeu_thich` int(11) NOT NULL,
+  `id_yeu_thich` int(11) NOT NULL AUTO_INCREMENT,
   `id_khachhang` int(11) NOT NULL,
   `id_sanpham` int(11) UNSIGNED NOT NULL,
-  `ngay_them` datetime DEFAULT current_timestamp()
+  `ngay_them` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_yeu_thich`),
+  KEY `id_khachhang` (`id_khachhang`),
+  KEY `id_sanpham` (`id_sanpham`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `thong_so_ky_thuat`
---
-
+-- Tạo bảng `thong_so_ky_thuat` (Thông số kỹ thuật sản phẩm)
+-- --------------------------------------------------------
 CREATE TABLE `thong_so_ky_thuat` (
-  `id_thong_so` int(11) NOT NULL,
+  `id_thong_so` int(11) NOT NULL AUTO_INCREMENT,
   `id_sanpham` int(11) UNSIGNED NOT NULL,
   `ten_thong_so` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gia_tri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `gia_tri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_thong_so`),
+  KEY `id_sanpham` (`id_sanpham`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Chỉ mục cho các bảng đã đổ
---
 
---
--- Chỉ mục cho bảng `chitiet_donhang`
---
-ALTER TABLE `chitiet_donhang`
-  ADD PRIMARY KEY (`id_chitiet`),
-  ADD KEY `id_donhang` (`id_donhang`);
+INSERT INTO thong_so_ky_thuat (id_sanpham, ten_thong_so, gia_tri) VALUES
+-- 1. Phụ tùng gầm (id_dm = 1)
+(1, 'Chiều dài thước lái', '500 mm'),
+(1, 'Trọng lượng', '1.2 kg'),
+(1, 'Vật liệu', 'Thép hợp kim cao cấp'),
+(2, 'Chiều dài cây láp', '850 mm'),
+(2, 'Trọng lượng', '1.5 kg'),
+(2, 'Vật liệu', 'Thép hợp kim chịu nhiệt cao'),
 
---
--- Chỉ mục cho bảng `dmsanpham`
---
-ALTER TABLE `dmsanpham`
-  ADD PRIMARY KEY (`id_dm`);
+-- 2. Phụ tùng động cơ (id_dm = 2)
+(3, 'Điện áp hoạt động', '12V'),
+(3, 'Dòng điện tiêu thụ', '0.2A'),
+(3, 'Bảo hành', '12 tháng'),
+(4, 'Dòng chảy dầu', '500 l/h'),
+(4, 'Bảo hành', '6 tháng'),
 
---
--- Chỉ mục cho bảng `donhang`
---
-ALTER TABLE `donhang`
-  ADD PRIMARY KEY (`id_donhang`),
-  ADD KEY `id_khachhang` (`id_khachhang`);
+-- 3. Phụ tùng điện lạnh (id_dm = 3)
+(5, 'Kích thước dàn nóng', '400 x 300 x 120 mm'),
+(5, 'Vật liệu dàn nóng', 'Nhôm nguyên khối'),
+(5, 'Công suất làm mát', '3000 BTU'),
+(6, 'Kích thước dàn lạnh', '500 x 400 x 120 mm'),
+(6, 'Vật liệu dàn lạnh', 'Nhôm phủ chống nấm mốc'),
+(6, 'Công suất làm mát', '2800 BTU'),
 
---
--- Chỉ mục cho bảng `sanpham`
---
-ALTER TABLE `sanpham`
-  ADD PRIMARY KEY (`id_sp`);
+-- 4. Phụ tùng thân vỏ (id_dm = 4)
+(7, 'Độ sáng đèn hậu', '500 lumens'),
+(7, 'Màu ánh sáng', 'Đỏ'),
+(7, 'Tuổi thọ LED', '50,000 giờ'),
+(8, 'Độ sáng đèn pha', '3000 lumens'),
+(8, 'Màu ánh sáng', 'Trắng 6000K'),
+(8, 'Tuổi thọ LED', '40,000 giờ'),
 
---
--- Chỉ mục cho bảng `thanhvien`
---
-ALTER TABLE `thanhvien`
-  ADD PRIMARY KEY (`id_thanhvien`);
+-- 5. Dầu nhờn - Phụ gia ô tô (id_dm = 5)
+(9, 'Dung tích', '1 lít'),
+(9, 'Công dụng', 'Chống gỉ, chống sôi, bảo vệ động cơ'),
+(9, 'Nhiệt độ làm việc', '-40°C đến 120°C'),
 
---
--- Chỉ mục cho bảng `khachhang`
---
-ALTER TABLE `khachhang`
-  ADD PRIMARY KEY (`id_khachhang`),
-  ADD UNIQUE KEY `email` (`email`);
+-- 6. Phụ tùng nội thất (id_dm = 6)
+(10, 'Màn hình cảm ứng', '10 inch IPS'),
+(10, 'Kết nối', 'CarPlay, Android Auto'),
+(10, 'Bộ nhớ trong', '64GB'),
+(11, 'Gương chiếu hậu', 'Điện tử, chống chói'),
+(11, 'Kích thước gương', '10 x 5 cm'),
+(11, 'Chất liệu gương', 'Kính chống chói xanh dương');
 
---
--- Chỉ mục cho bảng `yeu_thich`
---
-ALTER TABLE `yeu_thich`
-  ADD PRIMARY KEY (`id_yeu_thich`),
-  ADD KEY `id_khachhang` (`id_khachhang`),
-  ADD KEY `id_sanpham` (`id_sanpham`);
+-- --------------------------------------------------------
+-- Tạo bảng `images` lưu link ảnh phụ tùng
+-- --------------------------------------------------------
+CREATE TABLE `images` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `part_name` varchar(255) NOT NULL,
+  `image_link` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_part_name` (`part_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Chỉ mục cho bảng `thong_so_ky_thuat`
---
-ALTER TABLE `thong_so_ky_thuat`
-  ADD PRIMARY KEY (`id_thong_so`),
-  ADD KEY `id_sanpham` (`id_sanpham`);
+-- Chèn dữ liệu vào bảng `images` (link ảnh phụ tùng)
+INSERT INTO `images` (`part_name`, `image_link`) VALUES
+('Thước lái', 'https://www.testingautos.com/car_care/images/tie-rod.jpg'),
+('Thước lái', 'https://bacnam.vn/wp-content/uploads/2024/03/Thuoc-lai-O-to-Hyundai-2-1.jpg'),
+('Cây láp', 'https://zestech.vn/wp-content/uploads/2022/06/cay-lap-la-gi.jpg'),
+('Cây láp', 'https://www3.wuling.id/wp-content/uploads/2024/06/Cover.jpg'),
+('Cây láp', 'https://i0.wp.com/www.theengineeringchoice.com/wp-content/uploads/2024/06/What-is-a-Drive-Shaft.webp'),
+('Bugi', 'https://danchoioto.vn/wp-content/uploads/2021/02/bugi-nickel.jpg.webp'),
+('Bugi', 'https://images02.military.com/sites/default/files/styles/full/public/media/offduty/auto-center/2013/08/sparkplugs.jpg'),
+('Bugi', 'https://www.fitch-autos.co.uk/wp-content/uploads/sites/5/2025/03/Spark-Plugs-Engine-Diagram.png'),
+('Lọc dầu động cơ', 'https://cdn.phutungmitsubishi.vn/media/b%C3%A0i%20vi%E1%BA%BFt/thay-loc-nhot-dong-co%20%281%29.jpg'),
+('Lọc dầu động cơ', 'https://s19528.pcdn.co/wp-content/uploads/2019/01/Oil-Filters.jpg'),
+('Dàn nóng', 'https://phutungotohp.vn/wp-content/uploads/2022/07/so-do-he-thong-gian-nong-dieu-hoa-tren-o-to.png'),
+('Dàn nóng', 'https://i.ytimg.com/vi/rVNLhPxvTXM/maxresdefault.jpg'),
+('Dàn nóng', 'https://www.lincolncustomauto.com/Files/Images/blog/acsystem.jpg'),
+('Dàn lạnh', 'https://tuning.vn/media/tintuc/1638982800/dan-lanh-o-to_%284%29.jpg'),
+('Dàn lạnh', 'https://carlightvision.com/wp-content/uploads/headlight-of-a-black-car.jpeg.webp'),
+('Dàn lạnh', 'https://parkers-images.bauersecure.com/wp-images/17166/930x620/what_are_led_headlights_50.jpg'),
+('Đèn hậu', 'https://vietnamgarage.vn/wp-content/uploads/2023/10/Den-Hau-Nguyen-Cum-7.png'),
+('Đèn hậu', 'https://www.howacarworks.com/illustration/2075/overhauling-a-light-cluster--2.png'),
+('Đèn hậu', 'https://undergroundlighting.com/cdn/shop/articles/Understanding_Red_Brake_Lights_on_Your_Car_0189cfd1-9ee0-46e7-ab2f-706f9fc399cf.jpg?v=1749616242'),
+('Đèn pha', 'https://cdn.chungauto.vn/uploads/den-o-to/den-led-o-to.jpg'),
+('Đèn pha', 'https://carlightvision.com/wp-content/uploads/headlight-of-a-black-car.jpeg.webp'),
+('Đèn pha', 'https://images.app.ridemotive.com/g2b8cn7ol2lrfxp1ucbo0kzt8i0k'),
+('Nước làm mát động cơ', 'https://focar.vn/Upload/product/green-coolant/avatar-nuoc-lam-mat-tieu-chuan-focar-green-coolant.webp'),
+('Nước làm mát động cơ', 'https://bdc2020.o0bc.com/wp-content/uploads/2019/07/RadiatorReport-scaled.jpg'),
+('Nước làm mát động cơ', 'https://natrad.com.au/wp-content/uploads/2017/08/radiator-coolant-hero-1030x588.jpg'),
+('Màn hình', 'https://carcam.vn/data/media/2071/files/Tin%20tuc/tin%20hang%20ngay/carcam-tin-tuc-00001.jpg'),
+('Màn hình', 'https://media.wired.com/photos/62a22acc8006a383782cdb62/3%3A2/w_2560%2Cc_limit/Apple-iOS16-CarPlay-Business-220606.jpg'),
+('Màn hình', 'https://www.cnet.com/a/img/resize/a5af29b167a75a3fec4a9d019e5a7b01dbe70086/hub/2018/06/11/1c80ec49-843a-428b-af70-0dfc846cff3f/infotainment-lead.jpg?auto=webp&fit=crop&height=675&width=1200'),
+('Gương chiếu hậu', 'https://lifepro.vn/wp-content/uploads/bang-gia-guong-chieu-hau-o-to-va-cach-thay-the-guong-chieu-hau.jpg'),
+('Gương chiếu hậu', 'https://images.unsplash.com/photo-1721631576246-023fd2745ee1?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDM0fHx8ZW58MHx8fHx8&ixlib=rb-4.0.3&q=60&w=3000'),
+('Gương chiếu hậu', 'https://m.media-amazon.com/images/I/61T6Bm%2BIjUL._AC_UF894%2C1000_QL80_.jpg');
 
---
--- AUTO_INCREMENT cho các bảng đã đổ
---
 
---
--- AUTO_INCREMENT cho bảng `chitiet_donhang`
---
-ALTER TABLE `chitiet_donhang`
-  MODIFY `id_chitiet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
-
---
--- AUTO_INCREMENT cho bảng `dmsanpham`
---
-ALTER TABLE `dmsanpham`
-  MODIFY `id_dm` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT cho bảng `donhang`
---
-ALTER TABLE `donhang`
-  MODIFY `id_donhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
-
---
--- AUTO_INCREMENT cho bảng `sanpham`
---
-ALTER TABLE `sanpham`
-  MODIFY `id_sp` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
-
---
--- AUTO_INCREMENT cho bảng `thanhvien`
---
-ALTER TABLE `thanhvien`
-  MODIFY `id_thanhvien` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT cho bảng `khachhang`
---
-ALTER TABLE `khachhang`
-  MODIFY `id_khachhang` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `yeu_thich`
---
-ALTER TABLE `yeu_thich`
-  MODIFY `id_yeu_thich` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `thong_so_ky_thuat`
---
-ALTER TABLE `thong_so_ky_thuat`
-  MODIFY `id_thong_so` int(11) NOT NULL AUTO_INCREMENT;
-
---
+-- --------------------------------------------------------
 -- Các ràng buộc cho các bảng đã đổ
---
+-- --------------------------------------------------------
 
---
 -- Các ràng buộc cho bảng `chitiet_donhang`
---
 ALTER TABLE `chitiet_donhang`
   ADD CONSTRAINT `chitiet_donhang_ibfk_1` FOREIGN KEY (`id_donhang`) REFERENCES `donhang` (`id_donhang`);
 
---
 -- Các ràng buộc cho bảng `donhang`
---
 ALTER TABLE `donhang`
   ADD CONSTRAINT `donhang_ibfk_1` FOREIGN KEY (`id_khachhang`) REFERENCES `khachhang` (`id_khachhang`);
 
---
 -- Các ràng buộc cho bảng `yeu_thich`
---
 ALTER TABLE `yeu_thich`
   ADD CONSTRAINT `yeu_thich_ibfk_1` FOREIGN KEY (`id_khachhang`) REFERENCES `khachhang` (`id_khachhang`),
   ADD CONSTRAINT `yeu_thich_ibfk_2` FOREIGN KEY (`id_sanpham`) REFERENCES `sanpham` (`id_sp`);
 
---
 -- Các ràng buộc cho bảng `thong_so_ky_thuat`
---
 ALTER TABLE `thong_so_ky_thuat`
   ADD CONSTRAINT `thong_so_ky_thuat_ibfk_1` FOREIGN KEY (`id_sanpham`) REFERENCES `sanpham` (`id_sp`);
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+COMMIT;

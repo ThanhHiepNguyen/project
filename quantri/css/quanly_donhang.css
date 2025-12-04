@@ -21,7 +21,8 @@
     overflow: hidden;
 }
 
-.order-management-header th, .order-management-row td {
+.order-management-header th,
+.order-management-row td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -51,7 +52,8 @@
 }
 
 /* Styles for buttons specific to order management */
-.update-status-button, .view-details-link {
+.update-status-button,
+.view-details-link {
     padding: 6px 12px;
     color: white;
     text-decoration: none;
@@ -113,7 +115,8 @@
 
 /* New active state for buttons */
 .show-button.active {
-    background-color: #1b1d1b; /* Example active color, can be customized */
+    background-color: #1b1d1b;
+    /* Example active color, can be customized */
     color: #fff;
 }
 
@@ -146,6 +149,7 @@
 .search-button:hover {
     background-color: #0056b3;
 }
+
 .back-button {
     background-color: #ff5722;
     color: white;
@@ -160,13 +164,15 @@
 .back-button:hover {
     background-color: #e64a19;
 }
+
 /* search */
-.timkiem{
+.timkiem {
     height: 25px;
     width: 200px;
     border-radius: 10px;
 }
-.dhktt{
+
+.dhktt {
     color: rgb(222, 56, 56);
     font-size: 25px;
     font-weight: bold;

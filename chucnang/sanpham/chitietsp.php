@@ -2,23 +2,46 @@
 <div class="prd-block">
     <div class="prd-only">
         <?php
-        $id_sp = $_GET['id_sp'];
+        $id_sp = isset($_GET['id_sp']) ? (int)$_GET['id_sp'] : 0;
         $sql = "SELECT * FROM sanpham WHERE id_sp = $id_sp";
         $query = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($query);
         $so_luong = $row['so_luong']; // Lấy số lượng sản phẩm
+
+        // Lấy thông số kỹ thuật sản phẩm (nếu có)
+        $tskt = [];
+        if ($id_sp > 0) {
+            $sql_ts = "SELECT ten_thong_so, gia_tri FROM thong_so_ky_thuat WHERE id_sanpham = $id_sp";
+            $query_ts = mysqli_query($conn, $sql_ts);
+            if ($query_ts) {
+                while ($row_ts = mysqli_fetch_assoc($query_ts)) {
+                    $tskt[] = $row_ts;
+                }
+            }
+        }
+
+        // Kiểm tra sản phẩm có nằm trong yêu thích của khách hiện tại không
+        $is_favorite = false;
+        if (isset($_SESSION['khachhang']) && $id_sp > 0) {
+            $id_khachhang = (int)$_SESSION['khachhang']['id_khachhang'];
+            $sql_fav = "SELECT id_yeu_thich FROM yeu_thich WHERE id_khachhang = $id_khachhang AND id_sanpham = $id_sp LIMIT 1";
+            $res_fav = mysqli_query($conn, $sql_fav);
+            if ($res_fav && mysqli_num_rows($res_fav) > 0) {
+                $is_favorite = true;
+            }
+        }
         ?>
 
         <div class="prd-img" style="position: relative;">
             <div id="slide">
-                <img id="hinh" style="width: 400px;height: 400px;margin-top:5px;margin-left:50px;" src="quantri/anh/<?php echo $row['anh_sp'] ?>" />
+                <img id="hinh" style="width: 400px;height: 400px;margin-top:5px;margin-left:50px;" src="<?php echo htmlspecialchars($row['anh_sp']); ?>" />
                 <i class="fa fa-chevron-circle-left" style="position:absolute;top:25%;left:50px;font-size: 30px;color:#b29696" onclick="prev()"></i>
                 <i class="fa fa-chevron-circle-right" style="position:absolute;top:25%;right:21px;font-size: 30px;color:#b29696" onclick="next()"></i>
                 <div class="small-img" style="width: 160%;margin-top:30px;margin-left:75px;">
-                    <img src="quantri/anh/<?php echo $row['anh_sp'] ?>" onclick="TransPhoto(this)">
-                    <img src="quantri/anh/<?php echo $row['anh_sp'] ?>" onclick="TransPhoto(this)">
-                    <img src="quantri/anh/<?php echo $row['anh_sp'] ?>" onclick="TransPhoto(this)">
-                    <img src="quantri/anh/<?php echo $row['anh_sp'] ?>" onclick="TransPhoto(this)">
+                    <img src="<?php echo htmlspecialchars($row['anh_sp']); ?>" onclick="TransPhoto(this)">
+                    <img src="<?php echo htmlspecialchars($row['anh_sp']); ?>" onclick="TransPhoto(this)">
+                    <img src="<?php echo htmlspecialchars($row['anh_sp']); ?>" onclick="TransPhoto(this)">
+                    <img src="<?php echo htmlspecialchars($row['anh_sp']); ?>" onclick="TransPhoto(this)">
                 </div>
             </div>
             <div class="rating-box">
@@ -74,10 +97,28 @@
             </div>
         </div>
         <div class="col-12 prd-intro" style="margin-left: 100px;margin-right:50px">
-            <h3 style="border-bottom:1px dashed black;margin-bottom: 20px;text-align: center;"><?php echo $row['ten_sp'] ?></h3>
-            <p style="line-height:2em;text-align: justify;"><?php echo $row['chi_tiet_sp'] ?></p>
+            <h3 style="border-bottom:1px dashed black;margin-bottom: 20px;text-align: center;"><?php echo htmlspecialchars($row['ten_sp']); ?></h3>
+            <p style="line-height:2em;text-align: justify;"><?php echo nl2br(htmlspecialchars($row['chi_tiet_sp'])); ?></p>
             <p>Giá sản phẩm: <span><?php echo number_format($row['gia_sp'], 0, ',', '.') ?> VNĐ</span></p>
-            <p>Khuyến mãi: <span><?php echo $row['khuyen_mai'] ?></span></p>
+            <p>Khuyến mãi: <span><?php echo htmlspecialchars($row['khuyen_mai']); ?></span></p>
+
+            <?php if (!empty($tskt)): ?>
+            <h4 style="margin-top: 20px; font-weight: bold;">Thông số kỹ thuật</h4>
+            <table style="width:100%; border-collapse: collapse; margin-top:10px;">
+                <tbody>
+                <?php foreach ($tskt as $ts): ?>
+                    <tr>
+                        <td style="border:1px solid #ddd; padding:8px; width:40%; font-weight:600;">
+                            <?php echo htmlspecialchars($ts['ten_thong_so']); ?>
+                        </td>
+                        <td style="border:1px solid #ddd; padding:8px;">
+                            <?php echo htmlspecialchars($ts['gia_tri']); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
 
             <!-- Hiển thị số lượng sản phẩm -->
             <p>Số lượng:
@@ -88,7 +129,7 @@
                 <?php endif; ?>
             </p>
             <hr>
-            <div style="margin-top: 50px;text-align: center;">
+            <div style="margin-top: 30px;text-align: center;">
                 <a href="javascript:void(0);" onclick="checkStockAndProceed(<?php echo $so_luong; ?>, 'chucnang/giohang/themhang.php?id_sp=<?php echo $row['id_sp']; ?>')">
                     <button type="button" class="btn-success">Thêm vào giỏ hàng</button>
                 </a>
@@ -96,6 +137,14 @@
                 <a href="javascript:void(0);" onclick="checkStockAndProceed(<?php echo $so_luong; ?>, 'index.php?page_layout=muahangtructiep&id_sp=<?php echo $row['id_sp']; ?>')">
                     <button type="button" class="btn-success">Mua ngay</button>
                 </a>
+                <?php if (isset($_SESSION['khachhang'])): ?>
+                    <a href="chucnang/yeuthich/toggle.php?id_sp=<?php echo $row['id_sp']; ?>&redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"
+                       style="margin-left: 10px; display:inline-block;">
+                        <button type="button" class="btn-success" style="background-color:#f97373;border-color:#f97373;">
+                            <?php echo $is_favorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'; ?>
+                        </button>
+                    </a>
+                <?php endif; ?>
             </div>
             <div style="border: 1px solid #a49a9a4f;border-radius: 10px;margin-top: 50px;">
                 <div style="display: block;padding:5px;background-color: #a49a9a4f;border-top-left-radius: 10px;
@@ -194,10 +243,10 @@
 </script>
 <script>
     var arr_hinh = [
-        "quantri/anh/<?php echo $row['anh_sp'] ?>",
-        "quantri/anh/<?php echo $row['anh_sp'] ?>",
-        "quantri/anh/<?php echo $row['anh_sp'] ?>",
-        "quantri/anh/<?php echo $row['anh_sp'] ?>"
+        "<?php echo htmlspecialchars($row['anh_sp']); ?>",
+        "<?php echo htmlspecialchars($row['anh_sp']); ?>",
+        "<?php echo htmlspecialchars($row['anh_sp']); ?>",
+        "<?php echo htmlspecialchars($row['anh_sp']); ?>"
     ]
 
     var index = 0;

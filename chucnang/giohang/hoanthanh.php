@@ -10,7 +10,7 @@
         <!-- Success Message -->
         <div class="space-y-4 mb-8">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                Cảm ơn quý khách đã mua hàng tại Phụ Tùng Xe Hạnh Phương!
+                Cảm ơn quý khách đã mua hàng tại Shop Thu Minh!
             </h1>
             <p class="text-lg text-gray-600">
                 Hóa đơn mua hàng đã được gửi đến địa chỉ email của quý khách.

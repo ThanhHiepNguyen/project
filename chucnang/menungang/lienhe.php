@@ -20,7 +20,7 @@
         <!-- Contact Info -->
         <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
             <p class="text-gray-700 mb-6 text-lg">
-                Vui lòng liên hệ với Phụ Tùng Xe Hạnh Phương theo địa chỉ bên dưới. Chúng tôi luôn sẵn sàng tư vấn và hỗ trợ quý khách về phụ tùng xe. Xin cảm ơn quý khách, rất hân hạnh được phục vụ!
+                Vui lòng liên hệ với Shop Thu Minh theo địa chỉ bên dưới. Chúng tôi luôn sẵn sàng tư vấn và hỗ trợ quý khách về phụ tùng xe. Xin cảm ơn quý khách, rất hân hạnh được phục vụ!
             </p>
             
             <ul class="space-y-4 mb-8">

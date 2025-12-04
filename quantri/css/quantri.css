@@ -1,9 +1,15 @@
 @charset "utf-8";
-a{
+
+a {
     text-decoration: none;
 }
+
 /* Resetting margins and paddings */
-body, ul, li, p, h1 {
+body,
+ul,
+li,
+p,
+h1 {
     margin: 0;
     padding: 0;
 }
@@ -32,7 +38,7 @@ body {
 
 /* Navbar styling */
 #navbar {
-	margin-left: 100px;
+    margin-left: 100px;
     display: flex;
     align-items: center;
 }
@@ -62,7 +68,7 @@ body {
 
 /* User info styling */
 #user-info {
-	margin-left: 250px;
+    margin-left: 250px;
     display: flex;
     /* align-items: center; */
     color: #fff;
@@ -99,7 +105,8 @@ body {
     margin-bottom: 20px;
 }
 
-#body table th, #body table td {
+#body table th,
+#body table td {
     border: 1px solid #ccc;
     padding: 12px 15px;
     text-align: left;
@@ -143,123 +150,37 @@ body {
     background-color: #c82333;
 }
 
-	
+
 
 
 /* danh muc sp */
-    .row {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .table-container {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    table, th, td {
-        border: 1px solid #ccc;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: left;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+.row {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.table-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ccc;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}

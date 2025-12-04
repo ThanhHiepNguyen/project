@@ -1,4 +1,12 @@
 <?php
+// Chỉ cho phép chủ shop sửa thông tin thành viên
+if (!isset($_SESSION)) {
+    session_start();
+}
+if (!isset($_SESSION['vai_tro']) || $_SESSION['vai_tro'] !== 'chu_shop') {
+    die('Bạn không có quyền sửa thông tin thành viên.');
+}
+
 require "../cauhinh/ketnoi.php";
 
 $id = $_GET['id'];

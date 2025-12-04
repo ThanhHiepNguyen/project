@@ -200,8 +200,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </div>
             </form>
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Hoặc đăng ký bằng</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 gap-3">
+                    <div>
+                        <button id="google-signup-button"
+                                class="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm
+                                       bg-white text-sm font-medium text-gray-700 hover:bg-gray-50
+                                       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <img src="https://www.citypng.com/public/uploads/preview/google-logo-icon-gsuite-hd-701751694791470gzbayltphh.png" class="h-5 w-5 mr-2" alt="Google Logo">
+                            Đăng ký với Google
+                        </button>
+                    </div>
+                    <div>
+                        <button id="facebook-signup-button"
+                                class="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm
+                                       bg-white text-sm font-medium text-gray-700 hover:bg-gray-50
+                                       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" class="h-5 w-5 mr-2" alt="Facebook Logo">
+                            Đăng ký với Facebook
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<?php require_once __DIR__ . '/../../cauhinh/firebase_config.php'; ?>
 
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+<script>
+    // ĐỔI TÊN BIẾN
+    const registerConfig = <?php echo json_encode($firebase_client_config); ?>;
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(registerConfig);
+    } else {
+        firebase.app(); 
+    }
+
+    const firebaseAuth = firebase.auth();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    const facebookProvider = new firebase.auth.FacebookAuthProvider();
+
+    // Nút Google
+    const btnGoogleReg = document.getElementById('google-signup-button');
+    if(btnGoogleReg) {
+        btnGoogleReg.addEventListener('click', (e) => {
+            e.preventDefault();
+            firebaseAuth.signInWithPopup(googleProvider)
+                .then((result) => result.user.getIdToken())
+                .then((idToken) => sendTokenToBackend(idToken)) // Dùng chung hàm xử lý backend
+                .catch((error) => alert("Lỗi Google: " + error.message));
+        });
+    }
+
+    // Nút Facebook
+    const btnFacebookReg = document.getElementById('facebook-signup-button');
+    if(btnFacebookReg) {
+        btnFacebookReg.addEventListener('click', (e) => {
+            e.preventDefault();
+            firebaseAuth.signInWithPopup(facebookProvider)
+                .then((result) => result.user.getIdToken())
+                .then((idToken) => sendTokenToBackend(idToken))
+                .catch((error) => alert("Lỗi Facebook: " + error.message));
+        });
+    }
+
+    function sendTokenToBackend(idToken) {
+        fetch('chucnang/auth/handle_firebase_auth.php', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idToken: idToken }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = 'index.php'; 
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch((error) => console.error('Error:', error));
+    }
+</script>

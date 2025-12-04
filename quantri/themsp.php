@@ -36,12 +36,11 @@ if (isset($_POST['submit'])) {
     } else {
         $chi_tiet_sp = $_POST['chi_tiet_sp'];
     }
-    // Ảnh mô tả sản phẩm
-    if ($_FILES['anh_sp']['name'] == '') {
-        $error_anh_sp = '<span style="color:red;">(*)<span>';
+    // Ảnh mô tả sản phẩm (link URL)
+    if (empty($_POST['anh_sp'])) {
+        $error_anh_sp = '<span style="color:red;">Vui lòng nhập link ảnh sản phẩm<span>';
     } else {
-        $anh_sp = $_FILES['anh_sp']['name'];
-        $tmp_name = $_FILES['anh_sp']['tmp_name'];
+        $anh_sp = trim($_POST['anh_sp']);
     }
     // Danh mục sản phẩm
     if ($_POST['id_dm'] == 'unselect') {
@@ -60,8 +59,6 @@ if (isset($_POST['submit'])) {
 
     // Kiểm tra tất cả các giá trị
     if (isset($ten_sp) && isset($gia_sp) && isset($khuyen_mai) && isset($trang_thai) && isset($chi_tiet_sp) && isset($anh_sp) && isset($id_dm) && isset($so_luong) && isset($dac_biet)) {
-
-        move_uploaded_file($tmp_name, 'anh/' . $anh_sp);
         $sql = "INSERT INTO sanpham (ten_sp, gia_sp, khuyen_mai, trang_thai, chi_tiet_sp, anh_sp, id_dm, so_luong, dac_biet) 
                 VALUES ('$ten_sp', $gia_sp, '$khuyen_mai', '$trang_thai', '$chi_tiet_sp', '$anh_sp', $id_dm, $so_luong, $dac_biet)";
 
@@ -74,7 +71,7 @@ if (isset($_POST['submit'])) {
 <link rel="stylesheet" type="text/css" href="css/themsp.css" />
 <h2>Thêm mới sản phẩm</h2>
 <div id="main">
-    <form method="post" enctype="multipart/form-data">
+    <form method="post">
         <table id="add-prd" border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <td><label>Tên sản phẩm</label><br /><input type="text" name="ten_sp" /><?php if (isset($error_ten_sp)) {
@@ -82,9 +79,11 @@ if (isset($_POST['submit'])) {
                 } ?></td>
             </tr>
             <tr>
-                <td><label>Ảnh mô tả</label><br /><input type="file" name="anh_sp" /><?php if (isset($error_anh_sp)) {
-                    echo $error_anh_sp;
-                } ?></td>
+                <td>
+                    <label>Ảnh mô tả (link URL)</label><br />
+                    <input type="text" name="anh_sp" placeholder="https://example.com/anh-phu-tung.jpg" />
+                    <?php if (isset($error_anh_sp)) { echo $error_anh_sp; } ?>
+                </td>
             </tr>
             <tr>
                 <td><label>Loại sản phẩm</label><br />

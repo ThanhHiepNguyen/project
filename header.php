@@ -1,4 +1,8 @@
 <?php
+// Load environment variables (Firebase keys, etc.)
+require_once __DIR__ . '/cauhinh/env.php';
+
+// Build category + sub-category menu from dmsanpham & dmphutung_con
 $categoryMenu = [];
 $categoryResult = mysqli_query($conn, "SELECT * FROM dmsanpham ORDER BY id_dm ASC");
 if ($categoryResult) {
@@ -7,6 +11,7 @@ if ($categoryResult) {
         $categoryMenu[$cat['id_dm']] = $cat;
     }
 }
+
 if (!empty($categoryMenu)) {
     $childResult = mysqli_query($conn, "SELECT * FROM dmphutung_con ORDER BY id_dm ASC, ten_dm_con ASC");
     if ($childResult) {
@@ -27,7 +32,7 @@ if (!empty($categoryMenu)) {
             <!-- Logo -->
             <div class="flex-shrink-0">
                 <a href="index.php" class="block">
-                    <img src="anh/logo.png" alt="Phụ Tùng Xe Hạnh Phương" class="h-12 w-auto hover:opacity-80 transition-opacity">
+                    <img src="anh/logo.png" alt="Shop Thu Minh" class="h-12 w-auto hover:opacity-80 transition-opacity">
                 </a>
             </div>
 
@@ -92,6 +97,14 @@ if (!empty($categoryMenu)) {
                     <div id="user-menu"
                          class="hidden absolute right-0 mt-2 w-48 rounded-xl bg-white shadow-lg border border-gray-100 py-2 z-50">
                         <?php if (isset($_SESSION['khachhang'])): ?>
+                            <a href="index.php?page_layout=hoso"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700">
+                                Hồ sơ cá nhân
+                            </a>
+                            <a href="index.php?page_layout=yeuthich"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700">
+                                Sản phẩm yêu thích
+                            </a>
                             <a href="index.php?page_layout=donhangcuatoi"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700">
                                 Đơn hàng của tôi
@@ -126,76 +139,33 @@ if (!empty($categoryMenu)) {
         </div>
     </div>
 
-    <!-- Category Navigation -->
-    <div class="bg-white border-t border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="relative w-full md:w-auto">
-                <button id="mega-menu-toggle"
-                        class="w-full md:w-auto inline-flex items-center justify-between md:justify-center px-5 py-2.5 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-semibold shadow-sm hover:bg-blue-100 transition-colors duration-200">
-                    <span class="flex items-center">
-                        <i class="fa-solid fa-bars mr-2"></i>
-                        Danh mục sản phẩm
-                    </span>
-                    <i class="fa-solid fa-chevron-down text-xs ml-3"></i>
-                </button>
-                <div id="mega-menu-panel"
-                     class="hidden absolute left-0 mt-3 w-full md:w-[720px] bg-white border border-gray-200 rounded-2xl shadow-2xl z-50">
-                    <?php if (!empty($categoryMenu)): ?>
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-5/12 border-b md:border-b-0 md:border-r border-gray-100 bg-blue-50 rounded-t-2xl md:rounded-l-2xl p-3 space-y-1">
-                                <?php
-                                $firstKey = array_key_first($categoryMenu);
-                                foreach ($categoryMenu as $catId => $category):
-                                ?>
-                                    <button
-                                        class="category-item w-full text-left px-4 py-2 rounded-xl text-sm font-semibold transition-colors duration-150 <?php echo $catId === $firstKey ? 'bg-blue-600 text-white shadow' : 'text-blue-700 hover:bg-blue-100'; ?>"
-                                        data-target="cat-<?php echo $catId; ?>">
-                                        <?php echo htmlspecialchars($category['ten_dm']); ?>
-                                    </button>
-                                <?php endforeach; ?>
-                            </div>
-                            <div class="md:w-7/12 p-5 space-y-4">
-                                <?php foreach ($categoryMenu as $catId => $category): ?>
-                                    <div id="cat-<?php echo $catId; ?>" class="subcategory-panel <?php echo $catId === $firstKey ? '' : 'hidden'; ?>">
-                                        <p class="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wide">
-                                            <?php echo htmlspecialchars($category['ten_dm']); ?>
-                                        </p>
-                                        <?php if (!empty($category['children'])): ?>
-                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                <?php foreach ($category['children'] as $child): ?>
-                                                    <a href="index.php?page_layout=danhsachsp&id_dm=<?php echo $category['id_dm']; ?>&ten_dm=<?php echo urlencode($category['ten_dm']); ?>"
-                                                       class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-blue-50 hover:text-blue-600 text-sm font-medium text-gray-700 transition-colors duration-150">
-                                                        <?php echo htmlspecialchars($child['ten_dm_con']); ?>
-                                                    </a>
-                                                <?php endforeach; ?>
-                                            </div>
-                                        <?php else: ?>
-                                            <p class="text-sm text-gray-500">Danh mục này đang được cập nhật.</p>
-                                        <?php endif; ?>
-                                        <div class="mt-4">
-                                            <a href="index.php?page_layout=danhsachsp&id_dm=<?php echo $category['id_dm']; ?>&ten_dm=<?php echo urlencode($category['ten_dm']); ?>"
-                                               class="inline-flex items-center text-xs font-semibold text-blue-600 hover:text-blue-700">
-                                                Xem tất cả sản phẩm
-                                                <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <div class="p-4 text-sm text-gray-600">
-                            Chưa có danh mục sản phẩm. Vui lòng bổ sung dữ liệu trong bảng <code>dmsanpham</code>.
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <div class="flex items-center space-x-4 text-sm font-semibold text-gray-600 overflow-x-auto">
-                <a href="#" class="hover:text-blue-600 transition-colors duration-150">Tin tức</a>
-                <a href="#" class="hover:text-blue-600 transition-colors duration-150">Tuyển dụng</a>
-                <a href="index.php?page_layout=lienhe" class="hover:text-blue-600 transition-colors duration-150">Liên hệ</a>
-                <a href="#" class="hover:text-blue-600 transition-colors duration-150">Sự kiện</a>
-            </div>
+    <!-- Category Navigation: thanh danh mục ngang -->
+    <div class="bg-white border-t border-gray-300 shadow-sm">
+        <style>
+            /* Ẩn thanh cuộn ngang nhưng vẫn scroll được */
+            #category-scroll {
+                -ms-overflow-style: none;  /* IE, Edge */
+                scrollbar-width: none;     /* Firefox */
+            }
+            #category-scroll::-webkit-scrollbar {
+                display: none;             /* Chrome, Safari */
+            }
+        </style>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav id="category-scroll"
+                 class="flex items-center justify-start overflow-x-auto py-3 space-x-4"
+                 style="cursor: grab; user-select: none; padding-right: 2rem;">
+                <?php
+                $sql = "SELECT * FROM dmsanpham ORDER BY id_dm ASC";
+                $query = mysqli_query($conn, $sql);
+                while ($row = mysqli_fetch_array($query)) {
+                ?>
+                    <a href="index.php?page_layout=danhsachsp&id_dm=<?php echo $row['id_dm']; ?>&ten_dm=<?php echo urlencode($row['ten_dm']); ?>"
+                       class="flex-shrink-0 min-w-[220px] text-center px-6 py-3 rounded-full border border-blue-200 bg-white text-blue-700 font-semibold whitespace-nowrap hover:bg-blue-50 hover:text-blue-800 transition-colors duration-200 shadow-sm">
+                        <?php echo htmlspecialchars($row['ten_dm']); ?>
+                    </a>
+                <?php } ?>
+            </nav>
         </div>
     </div>
 
@@ -203,13 +173,13 @@ if (!empty($categoryMenu)) {
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
         <div class="px-4 pt-2 pb-4 space-y-1">
             <a href="index.php" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
-                <i class="fa-solid fa-home mr-2"></i>Trang chủ
+                Trang chủ
             </a>
             <a href="index.php?page_layout=gioithieu" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
-                <i class="fa-solid fa-info-circle mr-2"></i>Giới thiệu
+                Giới thiệu
             </a>
             <a href="index.php?page_layout=lienhe" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
-                <i class="fa-solid fa-phone mr-2"></i>Liên hệ
+                Liên hệ
             </a>
             <div class="pt-2 border-t border-gray-200 mt-2">
                 <?php if (isset($_SESSION['khachhang'])): ?>
@@ -221,20 +191,20 @@ if (!empty($categoryMenu)) {
                     </p>
                     <a href="index.php?page_layout=donhangcuatoi"
                        class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
-                        <i class="fa-solid fa-box mr-2"></i>Đơn hàng của tôi
+                        Đơn hàng của tôi
                     </a>
                     <a href="index.php?page_layout=dangxuat"
                        class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
-                        <i class="fa-solid fa-right-from-bracket mr-2"></i>Đăng xuất
+                        Đăng xuất
                     </a>
                 <?php else: ?>
                     <a href="index.php?page_layout=dangnhap"
                        class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
-                        <i class="fa-solid fa-right-to-bracket mr-2"></i>Đăng nhập
+                        Đăng nhập
                     </a>
                     <a href="index.php?page_layout=dangky"
                        class="block px-3 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">
-                        <i class="fa-solid fa-user-plus mr-2"></i>Đăng ký
+                        Đăng ký
                     </a>
                 <?php endif; ?>
             </div>
@@ -269,44 +239,67 @@ if (!empty($categoryMenu)) {
         });
     }
 
-    // Mega menu interactions
-    const megaToggle = document.getElementById('mega-menu-toggle');
-    const megaPanel = document.getElementById('mega-menu-panel');
-    const categoryButtons = document.querySelectorAll('.category-item');
-    const subPanels = document.querySelectorAll('.subcategory-panel');
+    // Thanh danh mục hỗ trợ kéo như slider
+    const catScroll = document.getElementById('category-scroll');
+    if (catScroll) {
+        let isDragging = false;
+        let startX = 0;
+        let scrollStart = 0;
 
-    if (megaToggle && megaPanel) {
-        megaToggle.addEventListener('click', function (e) {
+        const beginDrag = (pageX) => {
+            isDragging = true;
+            startX = pageX;
+            scrollStart = catScroll.scrollLeft;
+            catScroll.style.cursor = 'grabbing';
+        };
+
+        const stopDrag = () => {
+            isDragging = false;
+            catScroll.style.cursor = 'grab';
+        };
+
+        const moveDrag = (pageX) => {
+            if (!isDragging) return;
+            const delta = pageX - startX;
+            catScroll.scrollLeft = scrollStart - delta;
+        };
+
+        // Mouse
+        catScroll.addEventListener('mousedown', (e) => beginDrag(e.pageX));
+        window.addEventListener('mouseup', stopDrag);
+        catScroll.addEventListener('mouseleave', stopDrag);
+        catScroll.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
             e.preventDefault();
-            megaPanel.classList.toggle('hidden');
+            moveDrag(e.pageX);
         });
 
-        document.addEventListener('click', function (event) {
-            if (!megaPanel.contains(event.target) && !megaToggle.contains(event.target)) {
-                megaPanel.classList.add('hidden');
-            }
-        });
+        // Touch
+        catScroll.addEventListener('touchstart', (e) => beginDrag(e.touches[0].pageX));
+        catScroll.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            moveDrag(e.touches[0].pageX);
+        }, { passive: false });
+        catScroll.addEventListener('touchend', stopDrag);
+        catScroll.addEventListener('touchcancel', stopDrag);
     }
+</script>
 
-    function setActiveCategory(button) {
-        const targetId = button.getAttribute('data-target');
-        categoryButtons.forEach(btn => btn.classList.remove('bg-blue-600', 'text-white', 'shadow'));
-        button.classList.add('bg-blue-600', 'text-white', 'shadow');
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "<?php echo getenv('FIREBASE_API_KEY'); ?>",
+    authDomain: "<?php echo getenv('FIREBASE_AUTH_DOMAIN'); ?>",
+    projectId: "<?php echo getenv('FIREBASE_PROJECT_ID'); ?>",
+    storageBucket: "<?php echo getenv('FIREBASE_STORAGE_BUCKET'); ?>",
+    messagingSenderId: "<?php echo getenv('FIREBASE_MESSAGING_SENDER_ID'); ?>",
+    appId: "<?php echo getenv('FIREBASE_APP_ID'); ?>"
+  };
 
-        subPanels.forEach(panel => {
-            if (panel.id === targetId) {
-                panel.classList.remove('hidden');
-            } else {
-                panel.classList.add('hidden');
-            }
-        });
-    }
-
-    categoryButtons.forEach(button => {
-        button.addEventListener('mouseenter', () => setActiveCategory(button));
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            setActiveCategory(button);
-        });
-    });
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 </script>

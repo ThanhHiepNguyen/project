@@ -23,8 +23,11 @@
 			if($rows<=0){
 				$error = 'Tài khoản hoặc mật khẩu chưa đúng';
 			}else{
+                // Lấy thông tin thành viên (bao gồm vai_tro)
+				$user = mysqli_fetch_assoc($query);
 				$_SESSION['tk'] = $tk;
 				$_SESSION['mk'] = $mk;
+                $_SESSION['vai_tro'] = isset($user['vai_tro']) ? $user['vai_tro'] : 'nhan_vien';
 				header('location:quantri.php');
 			}
 		}
@@ -35,7 +38,7 @@
 <html>
 <head>
 	<meta charset="utf8" />
-	<title>Phụ Tùng Xe Hạnh Phương - Đăng nhập</title>
+	<title>Shop Thu Minh - Đăng nhập quản trị</title>
 	<link rel="stylesheet" type="text/css" href="css/dangnhap.css" />
 </head>
 <body>

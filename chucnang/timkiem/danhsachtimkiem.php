@@ -22,7 +22,7 @@
             <div class="group relative bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2">
                 <a href="index.php?page_layout=chitietsp&id_sp=<?php echo $row['id_sp'] ?>" class="block">
                     <div class="relative overflow-hidden bg-gray-100 aspect-square">
-                        <img src="quantri/anh/<?php echo $row['anh_sp'] ?>" 
+                        <img src="<?php echo htmlspecialchars($row['anh_sp']); ?>" 
                              alt="<?php echo htmlspecialchars($row['ten_sp']); ?>"
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>

@@ -46,7 +46,7 @@ if (isset($_POST['update_cart'])) {
                         <div class="flex flex-col md:flex-row gap-6">
                             <!-- Product Image -->
                             <div class="flex-shrink-0">
-                                <img src="quantri/anh/<?php echo $row['anh_sp'] ?>" 
+                                <img src="<?php echo htmlspecialchars($row['anh_sp']); ?>" 
                                      alt="<?php echo htmlspecialchars($row['ten_sp']); ?>"
                                      class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg shadow-md">
                             </div>

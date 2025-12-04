@@ -4,8 +4,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Logo & Company Info -->
             <div class="space-y-4">
-                <img src="anh/logo.png" alt="Phụ Tùng Xe Hạnh Phương" class="h-24 w-auto mb-4">
-                <p class="text-gray-300 text-sm font-semibold">Phụ Tùng Xe Hạnh Phương</p>
+                <img src="anh/logo.png" alt="Shop Thu Minh" class="h-24 w-auto mb-4">
+                <p class="text-gray-300 text-sm font-semibold">Shop Thu Minh</p>
                 <p class="text-gray-400 text-sm">2151150037-2151150053</p>
             </div>
 
@@ -116,7 +116,7 @@
         <!-- Copyright -->
         <div class="border-t border-gray-700 mt-8 pt-8 text-center">
             <p class="text-gray-400 text-sm">
-                &copy; <?php echo date('Y'); ?> Phụ Tùng Xe Hạnh Phương. Tất cả quyền được bảo lưu.
+                &copy; <?php echo date('Y'); ?> Shop Thu Minh. Tất cả quyền được bảo lưu.
             </p>
         </div>
     </div>

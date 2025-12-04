@@ -46,7 +46,13 @@
                 <td class="l5"><?php echo $row['ten_sp']; ?></td>
                 <td class="l5"><span class="price"><?php echo $row['gia_sp']; ?> VNĐ</span></td>
                 <td class="l5"><?php echo $row['ten_dm'] ?></td>
-                <td><span class="thumb"><img width="60" src="anh/<?php echo $row['anh_sp']; ?>" /></span></td>
+                <td>
+                    <span class="thumb">
+                        <img width="60"
+                             src="<?php echo htmlspecialchars($row['anh_sp']); ?>"
+                             alt="<?php echo htmlspecialchars($row['ten_sp']); ?>" />
+                    </span>
+                </td>
                 <td><span><?php echo $row['so_luong']; ?></span></td>
                 <td>
                     <select name="trang_thai">

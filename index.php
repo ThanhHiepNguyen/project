@@ -8,8 +8,8 @@ require "cauhinh/ketnoi.php";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phụ Tùng Xe Hạnh Phương - Phụ tùng xe máy, xe ô tô chính hãng</title>
-    <meta name="description" content="Phụ Tùng Xe Hạnh Phương - Chuyên cung cấp phụ tùng xe máy, xe ô tô chính hãng với chất lượng tốt nhất, giá cả hợp lý. Giao hàng nhanh, bảo hành uy tín.">
+    <title>Shop Thu Minh - Phụ tùng xe máy, xe ô tô chính hãng</title>
+    <meta name="description" content="Shop Thu Minh - Chuyên cung cấp phụ tùng xe máy, xe ô tô chính hãng với chất lượng tốt nhất, giá cả hợp lý. Giao hàng nhanh, bảo hành uy tín.">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -87,16 +87,24 @@ require "cauhinh/ketnoi.php";
                 case 'donhangcuatoi':
                     require_once('chucnang/auth/donhangcuatoi.php');
                     break;
+                case 'hoso':
+                    require_once('chucnang/auth/hoso.php');
+                    break;
+                case 'yeuthich':
+                    require_once('chucnang/yeuthich/danhsach.php');
+                    break;
                 case 'dangxuat':
                     require_once('chucnang/auth/dangxuat.php');
                     break;
                 default:
                     require_once('chucnang/sanpham/sanphamdacbiet.php');
+                    require_once('chucnang/sanpham/sanphamthinhhanh.php');
                     require_once('chucnang/sanpham/sanphammoi.php');
             }
         } else {
 
             require "chucnang/sanpham/sanphamdacbiet.php";
+            require "chucnang/sanpham/sanphamthinhhanh.php";
             require "chucnang/sanpham/sanphammoi.php";
         }
         ?>
