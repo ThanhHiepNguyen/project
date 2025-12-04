@@ -1,3 +1,7 @@
+<?php
+// Load environment variables
+require_once __DIR__ . '/cauhinh/env.php';
+?>
 <!-- Header -->
 <header class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 border-b-2 border-blue-700 shadow-lg">
     <!-- Top Header -->
@@ -114,7 +118,7 @@
                 $query = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_array($query)) {
                 ?>
-                    <a href="index.php?page_layout=danhsachsp&id_dm=<?php echo $row['id_dm'];?>&ten_dm=<?php echo urlencode($row['ten_dm']);?>" 
+                    <a href="index.php?page_layout=danhsachsp&id_dm=<?php echo $row['id_dm'];?>&ten_dm=<?php echo urlencode($row['ten_dm']);?>"
                        class="flex-shrink-0 text-gray-700 hover:text-blue-600 font-semibold px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap hover:bg-blue-50 border-b-2 border-transparent hover:border-blue-600">
                         <i class="fa-solid fa-wrench mr-2"></i>
                         <?php echo htmlspecialchars($row['ten_dm']); ?>
@@ -195,4 +199,23 @@
             }
         });
     }
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "<?php echo getenv('FIREBASE_API_KEY'); ?>",
+    authDomain: "<?php echo getenv('FIREBASE_AUTH_DOMAIN'); ?>",
+    projectId: "<?php echo getenv('FIREBASE_PROJECT_ID'); ?>",
+    storageBucket: "<?php echo getenv('FIREBASE_STORAGE_BUCKET'); ?>",
+    messagingSenderId: "<?php echo getenv('FIREBASE_MESSAGING_SENDER_ID'); ?>",
+    appId: "<?php echo getenv('FIREBASE_APP_ID'); ?>"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 </script>
