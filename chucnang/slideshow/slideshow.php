@@ -40,10 +40,10 @@
 </style>
 
 <div id="slideshow">
-	<img src="anh/sls01.jpg" alt="Slideshow Image 1" />
-    <img src="anh/sls02.png" alt="Slideshow Image 2" />
-    <img src="anh/sls03.jpg" alt="Slideshow Image 3" />
-    <img src="anh/sls04.jpg" alt="Slideshow Image 4" />
-    <img src="anh/sls05.jpg" alt="Slideshow Image 5" />
-    <img src="anh/sls06.jpg" alt="Slideshow Image 6" />
+	<img src="anh/slide1.png" alt="Slideshow Image 1" />
+    <img src="anh/slide2.png" alt="Slideshow Image 2" />
+    <img src="anh/slide3.png" alt="Slideshow Image 3" />
+    <img src="anh/slide4.png" alt="Slideshow Image 3" />
+    <img src="anh/slide5.png" alt="Slideshow Image 3" />
+    <img src="anh/slide6.png" alt="Slideshow Image 3" />
 </div>

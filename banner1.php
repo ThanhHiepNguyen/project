@@ -1,11 +1,11 @@
 <section class="relative w-full overflow-hidden">
     <div class="slider-content relative w-full h-96 md:h-[500px] lg:h-[600px]">
-        <img src="anh/sls01.jpg" alt="Phụ tùng xe chính hãng" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
-        <img src="anh/sls02.png" alt="Bộ sưu tập phụ tùng mới" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
-        <img src="anh/sls03.jpg" alt="Khuyến mãi đặc biệt" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
-        <img src="anh/sls04.jpg" alt="Phụ tùng xe máy, xe ô tô" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
-        <img src="anh/sls05.jpg" alt="Giao hàng nhanh" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
-        <img src="anh/sls06.jpg" alt="Sản phẩm nổi bật" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
+        <img src="anh/slide1.png" alt="Phụ tùng xe chính hãng" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
+        <img src="anh/slide2.png" alt="Bộ sưu tập phụ tùng mới" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
+        <img src="anh/slide3.png" alt="Khuyến mãi đặc biệt" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
+        <img src="anh/slide4.png" alt="Khuyến mãi đặc biệt" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
+        <img src="anh/slide5.png" alt="Khuyến mãi đặc biệt" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
+        <img src="anh/slide6.png" alt="Khuyến mãi đặc biệt" class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" />
         
         <!-- Overlay gradient -->
         <div class="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
